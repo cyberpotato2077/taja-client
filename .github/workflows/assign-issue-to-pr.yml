@@ -1,0 +1,40 @@
+name: assign_issue_number_to_pr_body
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  append_issue_number_to_pr_body:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Append feature number to PR body (branch = feat/{issueNumber})
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            // Forked repo에서 온 PR이면 스킵
+            if (pr.data.head.repo.fork) {
+              console.log("Forked repository PR detected. Skipping PR body update.");
+              return;
+            }
+
+            const body = pr.data.body || '';
+            const issueNumber = pr.data.head.ref.split('/')[1];
+            const newBody = body + "\n\n" + "close #" + issueNumber;
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: newBody
+            });
