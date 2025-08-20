@@ -9,28 +9,21 @@ export function BottomNavigation() {
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
 				<HomeIcon className="h-6 w-6" />
-				Home
+				지도
 			</Link>
 			<Link
-				to="/"
+				to="/statistics"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
 				<SearchIcon className="h-6 w-6" />
-				Search
+				통계
 			</Link>
 			<Link
-				to="/"
+				to="/my"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
 				<UserIcon className="h-6 w-6" />
-				Profile
-			</Link>
-			<Link
-				to="/"
-				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
-			>
-				<SettingsIcon className="h-6 w-6" />
-				Settings
+				MY
 			</Link>
 		</nav>
 	);
