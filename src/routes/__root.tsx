@@ -14,9 +14,11 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	component: () => (
 		<>
-			<div className="max-w-screen-sm mx-auto">
-				<Outlet />
-				<BottomNavigation />
+			<div className="min-h-screen bg-gray-100">
+				<div className="max-w-screen-sm mx-auto">
+					<Outlet />
+					<BottomNavigation />
+				</div>
 			</div>
 			<TanstackDevtools
 				config={{
