@@ -15,7 +15,7 @@ export function StationDrawer({
 }: { open: boolean; close: () => void }) {
 	return (
 		<Drawer open={open} onOpenChange={close}>
-			<DrawerContent>
+			<DrawerContent className="max-w-screen-sm !left-1/2 !-translate-x-1/2">
 				<div className="mx-auto w-full max-w-sm">
 					<DrawerHeader>
 						<DrawerTitle>DD</DrawerTitle>
