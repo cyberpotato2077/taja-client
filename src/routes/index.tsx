@@ -1,14 +1,15 @@
 import { StationDrawer } from "@/components/maps/station-drawer";
 import { SearchBar } from "@/components/search-bar";
 import { Button } from "@/components/ui/button";
+import { useOverlay } from "@/hooks/use-overlay";
 import { createFileRoute } from "@tanstack/react-router";
-import { overlay } from "overlay-kit";
 
 export const Route = createFileRoute("/")({
 	component: App,
 });
 
 function App() {
+	const overlay = useOverlay();
 	return (
 		<div>
 			<SearchBar />
