@@ -1,3 +1,4 @@
+import { StationDrawer } from "@/components/maps/station-drawer";
 import { SearchBar } from "@/components/search-bar";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -9,7 +10,10 @@ function App() {
 	return (
 		<div>
 			<SearchBar />
-			<div className="bg-red-400 h-[100vh] w-full">지도</div>
+			<div className="bg-red-400 h-[100vh] w-full">
+				지도
+				<StationDrawer />
+			</div>
 		</div>
 	);
 }
