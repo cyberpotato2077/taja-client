@@ -8,6 +8,7 @@ import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provi
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
+import { OverlayProvider } from "overlay-kit";
 import reportWebVitals from "./reportWebVitals.ts";
 
 // Create a new router instance
@@ -38,9 +39,11 @@ if (rootElement && !rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-				<RouterProvider router={router} />
-			</TanStackQueryProvider.Provider>
+			<OverlayProvider>
+				<TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+					<RouterProvider router={router} />
+				</TanStackQueryProvider.Provider>
+			</OverlayProvider>
 		</StrictMode>,
 	);
 }
