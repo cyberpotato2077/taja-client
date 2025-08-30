@@ -13,7 +13,7 @@ export function StationMap() {
 	return (
 		<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
 			<GoogleMap
-				style={{ width: "100%", height: "100vh" }}
+				className="fixed top-0 max-w-screen-sm w-full h-[100vh]"
 				defaultCenter={position}
 				defaultZoom={10}
 				mapId="DEMO_MAP_ID"

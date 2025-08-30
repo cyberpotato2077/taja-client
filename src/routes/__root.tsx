@@ -18,8 +18,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			<>
 				<div className="min-h-screen bg-gray-100">
 					<div className="max-w-screen-sm mx-auto">
-						<Outlet />
 						<StationMap />
+						<Outlet />
 						<BottomNavigation />
 					</div>
 				</div>
