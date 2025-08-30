@@ -9,7 +9,7 @@ function RouteComponent() {
 	return (
 		<div>
 			<Top showBackButton />
-			Hello "/statistics"!
+			<div className="bg-white h-[100vh]">Hello "/statistics"!</div>
 		</div>
 	);
 }
