@@ -1,4 +1,4 @@
-import { Top } from "@/components/top";
+import { LayoutWithTop } from "@/components/layout-with-top";
 import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -8,9 +8,10 @@ export const Route = createFileRoute("/my")({
 
 function RouteComponent() {
 	return (
-		<div>
-			<Top showBackButton title="My" customButton={<Button>hi</Button>} />
-			Hello "/my"!
-		</div>
+		<LayoutWithTop
+			showBackButton
+			title="My"
+			customButton={<Button>hi</Button>}
+		/>
 	);
 }
