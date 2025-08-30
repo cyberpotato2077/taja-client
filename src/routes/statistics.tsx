@@ -1,3 +1,4 @@
+import { LayoutWithTop } from "@/components/layout-with-top";
 import { Top } from "@/components/top";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -7,9 +8,10 @@ export const Route = createFileRoute("/statistics")({
 
 function RouteComponent() {
 	return (
-		<div>
-			<Top showBackButton />
-			<div className="bg-white h-[100vh]">Hello "/statistics"!</div>
-		</div>
+		// <div>
+		// 	<Top showBackButton />
+		// 	<div className="bg-white h-[100vh]">Hello "/statistics"!</div>
+		// </div>
+		<LayoutWithTop showBackButton />
 	);
 }
