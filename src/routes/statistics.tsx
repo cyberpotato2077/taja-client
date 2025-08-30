@@ -1,5 +1,4 @@
 import { LayoutWithTop } from "@/components/layout-with-top";
-import { Top } from "@/components/top";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/statistics")({
