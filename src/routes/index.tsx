@@ -1,8 +1,12 @@
 import { StationDrawer } from "@/components/maps/station-drawer";
 import { SearchBar } from "@/components/search-bar";
-import { Button } from "@/components/ui/button";
 import { useOverlay } from "@/hooks/use-overlay";
 import { createFileRoute } from "@tanstack/react-router";
+import {
+	APIProvider,
+	AdvancedMarker,
+	Map as GoogleMap,
+} from "@vis.gl/react-google-maps";
 
 export const Route = createFileRoute("/")({
 	component: App,
@@ -10,23 +14,30 @@ export const Route = createFileRoute("/")({
 
 function App() {
 	const overlay = useOverlay();
+	const position = { lat: 53.54992, lng: 10.00678 };
+
 	return (
 		<div>
 			<SearchBar />
-			<div className="bg-red-400 h-[100vh] w-full">
-				지도
-				{/* 지도 들어올때까지 임시로 세팅함 */}
-				<div className="h-[400px]" />
-				<Button
-					onClick={() =>
-						overlay.open(({ isOpen, close }) => (
-							<StationDrawer open={isOpen} close={close} />
-						))
-					}
+			<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+				<GoogleMap
+					style={{ width: "100%", height: "100vh" }}
+					defaultCenter={position}
+					defaultZoom={10}
+					mapId="DEMO_MAP_ID"
+					disableDefaultUI={true}
+					renderingType="VECTOR"
 				>
-					드로어 열기
-				</Button>
-			</div>
+					<AdvancedMarker
+						position={position}
+						onClick={() =>
+							overlay.open(({ isOpen, close }) => (
+								<StationDrawer open={isOpen} close={close} />
+							))
+						}
+					/>
+				</GoogleMap>
+			</APIProvider>
 		</div>
 	);
 }
