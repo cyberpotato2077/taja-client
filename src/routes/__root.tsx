@@ -5,6 +5,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 import { BottomNavigation } from "@/components/bottom-navigation";
+import { StationMap } from "@/components/maps/station-map";
 import type { QueryClient } from "@tanstack/react-query";
 
 interface MyRouterContext {
@@ -12,26 +13,29 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-	component: () => (
-		<>
-			<div className="min-h-screen bg-gray-100">
-				<div className="max-w-screen-sm mx-auto">
-					<Outlet />
-					<BottomNavigation />
+	component: () => {
+		return (
+			<>
+				<div className="min-h-screen bg-gray-100">
+					<div className="max-w-screen-sm mx-auto">
+						<StationMap />
+						<Outlet />
+						<BottomNavigation />
+					</div>
 				</div>
-			</div>
-			<TanstackDevtools
-				config={{
-					position: "bottom-left",
-				}}
-				plugins={[
-					{
-						name: "Tanstack Router",
-						render: <TanStackRouterDevtoolsPanel />,
-					},
-					TanStackQueryDevtools,
-				]}
-			/>
-		</>
-	),
+				<TanstackDevtools
+					config={{
+						position: "bottom-left",
+					}}
+					plugins={[
+						{
+							name: "Tanstack Router",
+							render: <TanStackRouterDevtoolsPanel />,
+						},
+						TanStackQueryDevtools,
+					]}
+				/>
+			</>
+		);
+	},
 });
