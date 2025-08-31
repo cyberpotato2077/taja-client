@@ -25,6 +25,7 @@ export function LayoutWithTop({
 				<h1 className="w-3/5 text-center text-lg font-semibold">{title}</h1>
 				<div className="w-1/5 flex justify-end">{customButton}</div>
 			</header>
+			{/* header 40px + bottom navigation bar 56px === 96px */}
 			<ScrollArea className="h-[calc(100vh-96px)] overflow-auto bg-white">
 				{Array.from({ length: 50 }, (_, i) => (
 					<div
