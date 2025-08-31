@@ -1,4 +1,5 @@
 import type { ComponentProps, ReactNode } from "react";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface TopProps {
 	title?: string;
@@ -13,7 +14,7 @@ export function LayoutWithTop({
 }: TopProps) {
 	return (
 		<div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-h-[100vh] max-w-screen-sm bg-white">
-			<header className="items-center justify-between px-4 shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+			<header className="h-[40px] flex justify items-center justify-between px-4 shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
 				<div className="w-1/5">
 					{showBackButton && (
 						<button type="button" className="p-2">
@@ -24,7 +25,8 @@ export function LayoutWithTop({
 				<h1 className="w-3/5 text-center text-lg font-semibold">{title}</h1>
 				<div className="w-1/5 flex justify-end">{customButton}</div>
 			</header>
-			<div className="h-[100vh] overflow-auto bg-white">
+			{/* header 40px + bottom navigation bar 56px === 96px */}
+			<ScrollArea className="h-[calc(100vh-96px)] overflow-auto bg-white">
 				{Array.from({ length: 50 }, (_, i) => (
 					<div
 						key={`row-${
@@ -35,7 +37,7 @@ export function LayoutWithTop({
 						{i}
 					</div>
 				))}
-			</div>
+			</ScrollArea>
 		</div>
 	);
 }
