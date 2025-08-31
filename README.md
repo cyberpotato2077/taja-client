@@ -19,5 +19,6 @@ https://cyberpotato2077.github.io/taja-client/
   - overlay-kit
   - es-toolkit
   - suspensive
+  - es-hangul
 - biome
 - Vite
