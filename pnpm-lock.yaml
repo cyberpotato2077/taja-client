@@ -62,6 +62,9 @@ importers:
       lucide-react:
         specifier: ^0.476.0
         version: 0.476.0(react@19.1.1)
+      nuqs:
+        specifier: ^2.6.0
+        version: 2.6.0(@tanstack/react-router@1.131.24(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
       overlay-kit:
         specifier: ^1.8.4
         version: 1.8.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -904,6 +907,9 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@standard-schema/spec@1.0.0':
+    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
+
   '@suspensive/react@3.6.0':
     resolution: {integrity: sha512-u8VbWxtHfXtWYimwhM/x0Kti2f09pEII70w7PtNUfL6Bm3mOAVUVvWhTDWEbqf1W7W8AYB4JNd51yL5gX5ABxQ==}
     peerDependencies:
@@ -1692,6 +1698,27 @@ packages:
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
+
+  nuqs@2.6.0:
+    resolution: {integrity: sha512-EvIKBvfJeyL8n6lxfebxoAbkHJutNsxmy1oo4noFUYNUESbnecxWxgnxXoa0/4fYiFwdEuyMQx1Z9rV0h4bnkg==}
+    peerDependencies:
+      '@remix-run/react': '>=2'
+      '@tanstack/react-router': ^1
+      next: '>=14.2.0'
+      react: '>=18.2.0 || ^19.0.0-0'
+      react-router: ^6 || ^7
+      react-router-dom: ^6 || ^7
+    peerDependenciesMeta:
+      '@remix-run/react':
+        optional: true
+      '@tanstack/react-router':
+        optional: true
+      next:
+        optional: true
+      react-router:
+        optional: true
+      react-router-dom:
+        optional: true
 
   nwsapi@2.2.21:
     resolution: {integrity: sha512-o6nIY3qwiSXl7/LuOU0Dmuctd34Yay0yeuZRLFmDPrrdHpXKFndPj3hM+YEPVHYC5fx2otBx4Ilc/gyYSAUaIA==}
@@ -2857,6 +2884,8 @@ snapshots:
     dependencies:
       solid-js: 1.9.9
 
+  '@standard-schema/spec@1.0.0': {}
+
   '@suspensive/react@3.6.0(react@19.1.1)':
     dependencies:
       react: 19.1.1
@@ -3653,6 +3682,13 @@ snapshots:
   node-releases@2.0.19: {}
 
   normalize-path@3.0.0: {}
+
+  nuqs@2.6.0(@tanstack/react-router@1.131.24(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1):
+    dependencies:
+      '@standard-schema/spec': 1.0.0
+      react: 19.1.1
+    optionalDependencies:
+      '@tanstack/react-router': 1.131.24(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
 
   nwsapi@2.2.21: {}
 
