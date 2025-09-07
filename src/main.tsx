@@ -24,6 +24,7 @@ async function enableMocking() {
 		serviceWorker: {
 			url: `${import.meta.env.BASE_URL}mockServiceWorker.js`,
 		},
+		onUnhandledRequest: "bypass",
 	});
 }
 
