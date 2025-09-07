@@ -20,7 +20,11 @@ async function enableMocking() {
 
 	// `worker.start()` returns a Promise that resolves
 	// once the Service Worker is up and running.
-	return worker.start();
+	return worker.start({
+		serviceWorker: {
+			url: `${import.meta.env.BASE_URL}mockServiceWorker.js`,
+		},
+	});
 }
 
 // Create a new router instance
