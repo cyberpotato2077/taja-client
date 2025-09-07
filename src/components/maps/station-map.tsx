@@ -27,9 +27,19 @@ export function StationMap() {
 				className="fixed top-0 max-w-screen-sm w-full h-[100vh]"
 				defaultCenter={position}
 				defaultZoom={15}
+				minZoom={10}
+				maxZoom={16}
 				mapId="DEMO_MAP_ID"
 				disableDefaultUI={true}
 				renderingType="VECTOR"
+				restriction={{
+					latLngBounds: {
+						north: 43,
+						south: 33,
+						west: 125,
+						east: 132,
+					},
+				}}
 			>
 				<AdvancedMarker
 					position={position}
