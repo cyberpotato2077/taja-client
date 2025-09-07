@@ -40,6 +40,27 @@ export function StationMap() {
 						east: 132,
 					},
 				}}
+				onIdle={(event) => {
+					// TODO: utils로 리팩터링
+					const center = event.map.getCenter();
+					const screenPosition = {
+						lat: center?.lat(),
+						lng: center?.lng(),
+					};
+					console.log(`screenPosition: ${JSON.stringify(screenPosition)}`);
+					const ne = event.map.getBounds()?.getNorthEast();
+					const nePosition = {
+						lat: ne?.lat(),
+						lng: ne?.lng(),
+					};
+					console.log(`nePosition: ${JSON.stringify(nePosition)}`);
+					const sw = event.map.getBounds()?.getSouthWest();
+					const swPosition = {
+						lat: sw?.lat(),
+						lng: sw?.lng(),
+					};
+					console.log(`swPosition: ${JSON.stringify(swPosition)}`);
+				}}
 			>
 				<AdvancedMarker
 					position={position}
