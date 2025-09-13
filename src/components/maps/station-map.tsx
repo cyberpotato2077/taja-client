@@ -6,6 +6,7 @@ import {
 	AdvancedMarker,
 	Map as GoogleMap,
 } from "@vis.gl/react-google-maps";
+import { StationMarkers } from "./station-markers";
 
 export function StationMap() {
 	const overlay = useOverlay();
@@ -27,10 +28,42 @@ export function StationMap() {
 				className="fixed top-0 max-w-screen-sm w-full h-[100vh]"
 				defaultCenter={position}
 				defaultZoom={15}
+				minZoom={10}
+				maxZoom={16}
 				mapId="DEMO_MAP_ID"
 				disableDefaultUI={true}
 				renderingType="VECTOR"
+				restriction={{
+					latLngBounds: {
+						north: 43,
+						south: 33,
+						west: 125,
+						east: 132,
+					},
+				}}
+				onIdle={(event) => {
+					// TODO: utils로 리팩터링
+					const center = event.map.getCenter();
+					const screenPosition = {
+						lat: center?.lat(),
+						lng: center?.lng(),
+					};
+					console.log(`screenPosition: ${JSON.stringify(screenPosition)}`);
+					const ne = event.map.getBounds()?.getNorthEast();
+					const nePosition = {
+						lat: ne?.lat(),
+						lng: ne?.lng(),
+					};
+					console.log(`nePosition: ${JSON.stringify(nePosition)}`);
+					const sw = event.map.getBounds()?.getSouthWest();
+					const swPosition = {
+						lat: sw?.lat(),
+						lng: sw?.lng(),
+					};
+					console.log(`swPosition: ${JSON.stringify(swPosition)}`);
+				}}
 			>
+				<StationMarkers />
 				<AdvancedMarker
 					position={position}
 					onClick={() =>
