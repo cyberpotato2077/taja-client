@@ -6,6 +6,7 @@ import {
 	AdvancedMarker,
 	Map as GoogleMap,
 } from "@vis.gl/react-google-maps";
+import { StationMarkers } from "./station-markers";
 
 export function StationMap() {
 	const overlay = useOverlay();
@@ -62,6 +63,7 @@ export function StationMap() {
 					console.log(`swPosition: ${JSON.stringify(swPosition)}`);
 				}}
 			>
+				<StationMarkers />
 				<AdvancedMarker
 					position={position}
 					onClick={() =>
