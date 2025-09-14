@@ -1,22 +1,19 @@
-// import { StationDrawer } from "@/components/maps/station-drawer";
-// import { useOverlay } from "@/hooks/use-overlay";
 import { parseAsFloat, useQueryStates } from "nuqs";
 
-import { MAP_ID } from "@/constants/maps";
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAP_ID } from "@/constants/maps";
 import { getScreen } from "@/utils/maps";
 import {
 	// AdvancedMarker,
 	Map as GoogleMap,
 } from "@vis.gl/react-google-maps";
+import { CurrentPositionMarker } from "./current-position-marker";
 import { StationMarkers } from "./station-markers";
 
 export function StationMap() {
-	// const overlay = useOverlay();
-
 	const [coordinates, setCoordinates] = useQueryStates(
 		{
-			latitude: parseAsFloat.withDefault(37.498132408887),
-			longitude: parseAsFloat.withDefault(127.02839523744),
+			latitude: parseAsFloat.withDefault(DEFAULT_LATITUDE),
+			longitude: parseAsFloat.withDefault(DEFAULT_LONGITUDE),
 			latDelta: parseAsFloat,
 			lngDelta: parseAsFloat,
 		},
@@ -76,14 +73,7 @@ export function StationMap() {
 			}}
 		>
 			<StationMarkers />
-			{/* <AdvancedMarker
-					position={position}
-					onClick={() =>
-						overlay.open(({ isOpen, close }) => (
-							<StationDrawer open={isOpen} close={close} />
-						))
-					}
-				/> */}
+			<CurrentPositionMarker />
 		</GoogleMap>
 	);
 }
