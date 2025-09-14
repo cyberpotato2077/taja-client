@@ -1,6 +1,7 @@
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from "@/constants/maps";
 import { useMap } from "@vis.gl/react-google-maps";
 import type { ComponentProps } from "react";
+import { match } from "ts-pattern";
 
 export function MapController() {
 	const map = useMap();
@@ -22,7 +23,12 @@ export function MapController() {
 			return;
 		}
 
-		map.setZoom(type === "in" ? currentZoom + 1 : currentZoom - 1);
+		map.setZoom(
+			match(type)
+				.with("in", () => currentZoom + 1)
+				.with("out", () => currentZoom - 1)
+				.exhaustive(),
+		);
 	};
 
 	return (
