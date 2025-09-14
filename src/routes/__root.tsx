@@ -7,6 +7,7 @@ import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { StationMap } from "@/components/maps/station-map";
 import type { QueryClient } from "@tanstack/react-query";
+import { NuqsAdapter } from "nuqs/adapters/tanstack-router";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -18,9 +19,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			<>
 				<div className="min-h-screen bg-gray-100">
 					<div className="max-w-screen-sm mx-auto">
-						<StationMap />
-						<Outlet />
-						<BottomNavigation />
+						<NuqsAdapter>
+							<StationMap />
+							<Outlet />
+							<BottomNavigation />
+						</NuqsAdapter>
 					</div>
 				</div>
 				<TanstackDevtools
