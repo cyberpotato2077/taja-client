@@ -1,78 +1,79 @@
-import { StationDrawer } from "@/components/maps/station-drawer";
-import { useOverlay } from "@/hooks/use-overlay";
+import { parseAsFloat, useQueryStates } from "nuqs";
 
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAP_ID } from "@/constants/maps";
+import { getScreen } from "@/utils/maps";
 import {
-	APIProvider,
-	AdvancedMarker,
+	// AdvancedMarker,
 	Map as GoogleMap,
 } from "@vis.gl/react-google-maps";
+import { CurrentPositionMarker } from "./current-position-marker";
 import { StationMarkers } from "./station-markers";
 
 export function StationMap() {
-	const overlay = useOverlay();
-
-	const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-	const position = { lat: 37.498132408887, lng: 127.02839523744 };
-
-	if (apiKey == null) {
-		return (
-			<div className="w-full h-full flex items-center justify-center min-h-[100vh] bg-gradient-to-b from-gray-300 via-gray-100 via-70% to-white">
-				apiKey를 찾지 못했습니다.
-			</div>
-		);
-	}
+	const [coordinates, setCoordinates] = useQueryStates(
+		{
+			latitude: parseAsFloat.withDefault(DEFAULT_LATITUDE),
+			longitude: parseAsFloat.withDefault(DEFAULT_LONGITUDE),
+			latDelta: parseAsFloat,
+			lngDelta: parseAsFloat,
+		},
+		{
+			history: "replace",
+		},
+	);
 
 	return (
-		<APIProvider apiKey={apiKey}>
-			<GoogleMap
-				className="fixed top-0 max-w-screen-sm w-full h-[100vh]"
-				defaultCenter={position}
-				defaultZoom={15}
-				minZoom={10}
-				maxZoom={16}
-				mapId="DEMO_MAP_ID"
-				disableDefaultUI={true}
-				renderingType="VECTOR"
-				restriction={{
-					latLngBounds: {
-						north: 43,
-						south: 33,
-						west: 125,
-						east: 132,
+		<GoogleMap
+			className="fixed top-0 max-w-screen-sm w-full h-[100vh]"
+			defaultCenter={{
+				lat: coordinates.latitude,
+				lng: coordinates.longitude,
+			}}
+			defaultZoom={15}
+			minZoom={10}
+			maxZoom={16}
+			mapId={MAP_ID}
+			disableDefaultUI={true}
+			renderingType="VECTOR"
+			restriction={{
+				latLngBounds: {
+					north: 43,
+					south: 33,
+					west: 125,
+					east: 132,
+				},
+			}}
+			onIdle={(event) => {
+				const center = event.map.getCenter();
+				const ne = event.map.getBounds()?.getNorthEast();
+				const sw = event.map.getBounds()?.getSouthWest();
+				if (center == null || ne == null || sw == null) {
+					return;
+				}
+				const { latitude, longitude, latDelta, lngDelta } = getScreen({
+					centerPosition: {
+						lat: center.lat(),
+						lng: center.lng(),
 					},
-				}}
-				onIdle={(event) => {
-					// TODO: utils로 리팩터링
-					const center = event.map.getCenter();
-					const screenPosition = {
-						lat: center?.lat(),
-						lng: center?.lng(),
-					};
-					console.log(`screenPosition: ${JSON.stringify(screenPosition)}`);
-					const ne = event.map.getBounds()?.getNorthEast();
-					const nePosition = {
-						lat: ne?.lat(),
-						lng: ne?.lng(),
-					};
-					console.log(`nePosition: ${JSON.stringify(nePosition)}`);
-					const sw = event.map.getBounds()?.getSouthWest();
-					const swPosition = {
-						lat: sw?.lat(),
-						lng: sw?.lng(),
-					};
-					console.log(`swPosition: ${JSON.stringify(swPosition)}`);
-				}}
-			>
-				<StationMarkers />
-				<AdvancedMarker
-					position={position}
-					onClick={() =>
-						overlay.open(({ isOpen, close }) => (
-							<StationDrawer open={isOpen} close={close} />
-						))
-					}
-				/>
-			</GoogleMap>
-		</APIProvider>
+					nePosition: {
+						lat: ne.lat(),
+						lng: ne.lng(),
+					},
+					swPosition: {
+						lat: sw.lat(),
+						lng: sw.lng(),
+					},
+				});
+				setCoordinates({
+					latitude,
+					longitude,
+					latDelta,
+					lngDelta,
+				});
+			}}
+		>
+			<StationMarkers />
+			<CurrentPositionMarker />
+		</GoogleMap>
 	);
 }
