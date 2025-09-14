@@ -5,6 +5,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 
 import { BottomNavigation } from "@/components/bottom-navigation";
+import { MapController } from "@/components/map-controller";
 import { GoogleMapWrapper } from "@/components/maps/google-map-wrapper";
 import { StationMap } from "@/components/maps/station-map";
 import type { QueryClient } from "@tanstack/react-query";
@@ -24,6 +25,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 							<GoogleMapWrapper>
 								<StationMap />
 								<Outlet />
+								<MapController />
 								<BottomNavigation />
 							</GoogleMapWrapper>
 						</NuqsAdapter>
