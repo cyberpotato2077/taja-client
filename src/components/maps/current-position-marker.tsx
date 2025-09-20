@@ -1,5 +1,5 @@
 import { StationDrawer } from "@/components/maps/station-drawer";
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from "@/constants/maps";
+import { DEFAULT_POSITION } from "@/constants/maps";
 import { useOverlay } from "@/hooks/use-overlay";
 import { AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 export function CurrentPositionMarker() {
@@ -7,8 +7,8 @@ export function CurrentPositionMarker() {
 	return (
 		<AdvancedMarker
 			position={{
-				lat: DEFAULT_LATITUDE,
-				lng: DEFAULT_LONGITUDE,
+				lat: DEFAULT_POSITION.latitude,
+				lng: DEFAULT_POSITION.longitude,
 			}}
 			onClick={() =>
 				overlay.open(({ isOpen, close }) => (
