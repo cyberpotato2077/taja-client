@@ -1,4 +1,4 @@
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from "@/constants/maps";
+import { DEFAULT_POSITION } from "@/constants/maps";
 import { useMap } from "@vis.gl/react-google-maps";
 import type { ComponentProps } from "react";
 import { match } from "ts-pattern";
@@ -12,8 +12,8 @@ export function MapController() {
 
 	const goToCurrentLocation = () => {
 		map.panTo({
-			lat: DEFAULT_LATITUDE,
-			lng: DEFAULT_LONGITUDE,
+			lat: DEFAULT_POSITION.latitude,
+			lng: DEFAULT_POSITION.longitude,
 		});
 	};
 

@@ -1,6 +1,6 @@
 import { parseAsFloat, useQueryStates } from "nuqs";
 
-import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, MAP_ID } from "@/constants/maps";
+import { DEFAULT_POSITION, MAP_ID, MAP_RESTRICTION } from "@/constants/maps";
 import { getScreen } from "@/utils/maps";
 import {
 	// AdvancedMarker,
@@ -12,8 +12,8 @@ import { StationMarkers } from "./station-markers";
 export function StationMap() {
 	const [coordinates, setCoordinates] = useQueryStates(
 		{
-			latitude: parseAsFloat.withDefault(DEFAULT_LATITUDE),
-			longitude: parseAsFloat.withDefault(DEFAULT_LONGITUDE),
+			latitude: parseAsFloat.withDefault(DEFAULT_POSITION.latitude),
+			longitude: parseAsFloat.withDefault(DEFAULT_POSITION.longitude),
 			latDelta: parseAsFloat,
 			lngDelta: parseAsFloat,
 		},
@@ -34,14 +34,10 @@ export function StationMap() {
 			maxZoom={16}
 			mapId={MAP_ID}
 			disableDefaultUI={true}
+			gestureHandling="greedy"
 			renderingType="VECTOR"
 			restriction={{
-				latLngBounds: {
-					north: 43,
-					south: 33,
-					west: 125,
-					east: 132,
-				},
+				latLngBounds: MAP_RESTRICTION,
 			}}
 			onIdle={(event) => {
 				const center = event.map.getCenter();

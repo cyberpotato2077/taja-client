@@ -1,49 +1,46 @@
+import { MAP_RESTRICTION } from "@/constants/maps";
 import { http, HttpResponse } from "msw";
 
 type Station = {
-  number: number;
-  bikeCount: number;
-  latitude: number;
-  longitude: number;
-  requestedAt: string;
+	id: number;
+	name: string;
+	latitude: number;
+	longitude: number;
+	bikeCount: number;
+	createdAt: string;
 };
 
-const MOCK_STATIONS: Station[] = [
-  {
-    number: 1,
-    bikeCount: 5,
-    latitude: 37.5665,
-    longitude: 126.978,
-    requestedAt: new Date().toISOString(),
-  },
-  {
-    number: 2,
-    bikeCount: 10,
-    latitude: 37.565,
-    longitude: 126.976,
-    requestedAt: new Date().toISOString(),
-  },
-  {
-    number: 3,
-    bikeCount: 2,
-    latitude: 37.568,
-    longitude: 126.979,
-    requestedAt: new Date().toISOString(),
-  },
-];
+const getRandomNumber = (min: number, max: number) => {
+	return Math.random() * (max - min) + min;
+};
+
+const createRandomStation = (index: number): Station => ({
+	id: index,
+	name: `Station ${index}`,
+	latitude: getRandomNumber(MAP_RESTRICTION.south, MAP_RESTRICTION.north),
+	longitude: getRandomNumber(MAP_RESTRICTION.west, MAP_RESTRICTION.east),
+	bikeCount: Math.floor(Math.random() * 20),
+	createdAt: new Date().toISOString(),
+});
+
+const createMockStations = (size: number): Station[] => {
+	return Array.from({ length: size }, (_, i) => createRandomStation(i + 1));
+};
 
 export const getNearbyStationsMock = http.get(
-  "/api/stations/map/nearby",
-  ({ request }) => {
-    const url = new URL(request.url);
-    const latitude = url.searchParams.get("latitude");
-    const longitude = url.searchParams.get("longitude");
+	"/api/stations/map/nearby",
+	({ request }) => {
+		const url = new URL(request.url);
+		const latitude = url.searchParams.get("latitude");
+		const longitude = url.searchParams.get("longitude");
+		const size = Number(url.searchParams.get("size") ?? 100);
 
-    console.log("msw:get :: /api/stations/map/nearby", {
-      latitude,
-      longitude,
-    });
+		console.log("msw:get :: /api/stations/map/nearby", {
+			latitude,
+			longitude,
+			size,
+		});
 
-    return HttpResponse.json<Station[]>(MOCK_STATIONS);
-  }
+		return HttpResponse.json<Station[]>(createMockStations(size));
+	},
 );

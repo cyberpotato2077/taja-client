@@ -18,7 +18,7 @@ type Station = {
 type GetNearbyStationsResponse = Array<Station>;
 
 export function getNearbyStations(params: GetNearbyStationsRequest) {
-	return http.get<GetNearbyStationsResponse>("/api/stations/map/nearby", {
+	return http.get<GetNearbyStationsResponse>("/stations/map/nearby", {
 		params,
 	});
 }
