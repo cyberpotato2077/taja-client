@@ -1,8 +1,13 @@
+import { useOverlay } from "@/hooks/use-overlay";
 import { getNearbyStations } from "@/remotes/getNearbyStations";
 import { useQuery } from "@tanstack/react-query";
-import { AdvancedMarker } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
+import { StationDrawer } from "./station-drawer";
 
 export function StationMarkers() {
+	const overlay = useOverlay();
+	const map = useMap();
+
 	const { data } = useQuery({
 		queryKey: ["stations"],
 		queryFn: () =>
@@ -14,7 +19,9 @@ export function StationMarkers() {
 			}),
 	});
 
-	console.log(data);
+	if (map == null) {
+		return null;
+	}
 
 	return (
 		<>
@@ -25,7 +32,15 @@ export function StationMarkers() {
 						lat: station.latitude,
 						lng: station.longitude,
 					}}
-					onClick={() => console.log(station)}
+					onClick={() => {
+						map.panTo({
+							lat: station.latitude,
+							lng: station.longitude,
+						});
+						overlay.open(({ isOpen, close }) => (
+							<StationDrawer open={isOpen} close={close} />
+						));
+					}}
 				/>
 			))}
 		</>
