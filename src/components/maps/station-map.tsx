@@ -34,6 +34,7 @@ export function StationMap() {
 			maxZoom={16}
 			mapId={MAP_ID}
 			disableDefaultUI={true}
+			gestureHandling="greedy"
 			renderingType="VECTOR"
 			restriction={{
 				latLngBounds: MAP_RESTRICTION,
