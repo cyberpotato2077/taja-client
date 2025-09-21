@@ -7,10 +7,17 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { LOCATIONS } from "@/constants/locations";
+import { useMap } from "@vis.gl/react-google-maps";
 import { disassemble } from "es-hangul";
 import { useState } from "react";
 
 export function SearchBar() {
+	const map = useMap();
+
+	if (map == null) {
+		return null;
+	}
+
 	const [query, setQuery] = useState("");
 
 	const filteredLocations =
@@ -26,11 +33,11 @@ export function SearchBar() {
 						disassembledName.includes(disassembledQuery) ||
 						disassembledAddress.includes(disassembledQuery)
 					);
-				});
+				}).slice(0, 5);
 
 	return (
 		<div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm px-4 z-50">
-			<Command>
+			<Command shouldFilter={false}>
 				{/* 입력창 */}
 				<CommandInput
 					placeholder="지역이나 충전소를 검색할 수 있어요."
@@ -47,11 +54,17 @@ export function SearchBar() {
 									<CommandItem
 										key={location.name}
 										onSelect={() => {
-											// TODO: 선택 시 동작 추가
-											console.log("Selected:", location);
+											map.panTo({
+												lat: location.latitude,
+												lng: location.longitude,
+											});
 										}}
+										className="flex"
 									>
-										{location.name}
+										<div>{location.name}</div>
+										<div className="text-xs text-gray-500">
+											{location.address}
+										</div>
 									</CommandItem>
 								))}
 							</CommandGroup>
