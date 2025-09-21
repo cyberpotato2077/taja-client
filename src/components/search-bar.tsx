@@ -6,10 +6,20 @@ import {
 	CommandItem,
 	CommandList,
 } from "@/components/ui/command";
+import { LOCATIONS } from "@/constants/locations";
 import { useState } from "react";
 
 export function SearchBar() {
 	const [query, setQuery] = useState("");
+
+	const filteredLocations =
+		query.trim() === ""
+			? []
+			: LOCATIONS.filter(
+					(location) =>
+						location.name.toLowerCase().includes(query.toLowerCase()) ||
+						location.address.toLowerCase().includes(query.toLowerCase()),
+				);
 
 	return (
 		<div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm px-4 z-50">
@@ -23,12 +33,22 @@ export function SearchBar() {
 				{/* 검색어 있을 때만 목록 표시 */}
 				{query.trim().length > 0 ? (
 					<CommandList className="max-h-60 overflow-auto">
-						<CommandEmpty>No results found.</CommandEmpty>
-						<CommandGroup heading="Suggestions">
-							<CommandItem>Calendar</CommandItem>
-							<CommandItem>Search Emoji</CommandItem>
-							<CommandItem>Calculator</CommandItem>
-						</CommandGroup>
+						<CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
+						{filteredLocations.length > 0 ? (
+							<CommandGroup heading="검색 결과">
+								{filteredLocations.map((location) => (
+									<CommandItem
+										key={location.name}
+										onSelect={() => {
+											// TODO: 선택 시 동작 추가
+											console.log("Selected:", location);
+										}}
+									>
+										{location.name}
+									</CommandItem>
+								))}
+							</CommandGroup>
+						) : null}
 					</CommandList>
 				) : null}
 			</Command>
