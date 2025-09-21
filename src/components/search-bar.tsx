@@ -7,6 +7,7 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { LOCATIONS } from "@/constants/locations";
+import { disassemble } from "es-hangul";
 import { useState } from "react";
 
 export function SearchBar() {
@@ -15,11 +16,17 @@ export function SearchBar() {
 	const filteredLocations =
 		query.trim() === ""
 			? []
-			: LOCATIONS.filter(
-					(location) =>
-						location.name.toLowerCase().includes(query.toLowerCase()) ||
-						location.address.toLowerCase().includes(query.toLowerCase()),
-				);
+			: LOCATIONS.filter((location) => {
+					const disassembledQuery = disassemble(query.toLowerCase());
+					const disassembledName = disassemble(location.name.toLowerCase());
+					const disassembledAddress = disassemble(
+						location.address.toLowerCase(),
+					);
+					return (
+						disassembledName.includes(disassembledQuery) ||
+						disassembledAddress.includes(disassembledQuery)
+					);
+				});
 
 	return (
 		<div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm px-4 z-50">
