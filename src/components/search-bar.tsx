@@ -43,6 +43,7 @@ export function SearchBar() {
 					placeholder="지역이나 충전소를 검색할 수 있어요."
 					value={query}
 					onValueChange={setQuery}
+					onClear={() => setQuery("")}
 				/>
 				{/* 검색어 있을 때만 목록 표시 */}
 				{query.trim().length > 0 ? (
