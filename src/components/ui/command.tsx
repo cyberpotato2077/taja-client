@@ -1,5 +1,5 @@
 import { Command as CommandPrimitive } from "cmdk";
-import { SearchIcon } from "lucide-react";
+import { SearchIcon, X } from "lucide-react";
 import * as React from "react";
 
 import {
@@ -60,8 +60,11 @@ function CommandDialog({
 
 function CommandInput({
 	className,
+	onClear,
 	...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: React.ComponentProps<typeof CommandPrimitive.Input> & {
+	onClear?: () => void;
+}) {
 	return (
 		<div
 			data-slot="command-input-wrapper"
@@ -76,6 +79,12 @@ function CommandInput({
 				)}
 				{...props}
 			/>
+			{props.value && String(props.value).length > 0 && onClear && (
+				<X
+					className="size-4 shrink-0 cursor-pointer opacity-50"
+					onClick={onClear}
+				/>
+			)}
 		</div>
 	);
 }
