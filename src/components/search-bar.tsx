@@ -16,7 +16,7 @@ export function SearchBar() {
 			<Command>
 				{/* 입력창 */}
 				<CommandInput
-					placeholder="Type a command or search..."
+					placeholder="지역이나 충전소를 검색할 수 있어요."
 					value={query}
 					onValueChange={setQuery}
 				/>
