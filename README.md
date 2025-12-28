@@ -10,15 +10,14 @@ https://cyberpotato2077.github.io/taja-client/
 - React
 - TypeScript
 - Tailwind
-- Tanstack
-  - router
-  - query
+- shadcn
+- Tanstack Router
+- Tanstack Query
 - vis.gl
   - react-google-maps
-- toss
-  - overlay-kit
-  - es-toolkit
-  - suspensive
-  - es-hangul
+- overlay-kit
+- es-toolkit
+- suspensive
+- es-hangul
 - biome
 - Vite
