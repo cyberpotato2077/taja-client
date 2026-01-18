@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatisticsRouteImport } from './routes/statistics'
 import { Route as MyRouteImport } from './routes/my'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StationIdRouteImport } from './routes/station/$id'
 
 const StatisticsRoute = StatisticsRouteImport.update({
   id: '/statistics',
@@ -28,35 +29,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StationIdRoute = StationIdRouteImport.update({
+  id: '/station/$id',
+  path: '/station/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/my': typeof MyRoute
   '/statistics': typeof StatisticsRoute
+  '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/my': typeof MyRoute
   '/statistics': typeof StatisticsRoute
+  '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/my': typeof MyRoute
   '/statistics': typeof StatisticsRoute
+  '/station/$id': typeof StationIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/my' | '/statistics'
+  fullPaths: '/' | '/my' | '/statistics' | '/station/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/my' | '/statistics'
-  id: '__root__' | '/' | '/my' | '/statistics'
+  to: '/' | '/my' | '/statistics' | '/station/$id'
+  id: '__root__' | '/' | '/my' | '/statistics' | '/station/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MyRoute: typeof MyRoute
   StatisticsRoute: typeof StatisticsRoute
+  StationIdRoute: typeof StationIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/station/$id': {
+      id: '/station/$id'
+      path: '/station/$id'
+      fullPath: '/station/$id'
+      preLoaderRoute: typeof StationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MyRoute: MyRoute,
   StatisticsRoute: StatisticsRoute,
+  StationIdRoute: StationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

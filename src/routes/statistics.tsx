@@ -7,10 +7,17 @@ export const Route = createFileRoute("/statistics")({
 
 function RouteComponent() {
 	return (
-		// <div>
-		// 	<Top showBackButton />
-		// 	<div className="bg-white h-[100vh]">Hello "/statistics"!</div>
-		// </div>
-		<LayoutWithTop showBackButton />
+		<LayoutWithTop showBackButton>
+			{Array.from({ length: 50 }, (_, i) => (
+				<div
+					key={`row-${
+						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						i
+					}`}
+				>
+					{i}
+				</div>
+			))}
+		</LayoutWithTop>
 	);
 }
