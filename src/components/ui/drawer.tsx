@@ -48,32 +48,55 @@ function DrawerContent({
 	children,
 	onDragNorth,
 	onDragSouth,
+	onDragEndNorth,
+	onDragEndSouth,
 	...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content> & {
 	onDragNorth?: () => void;
 	onDragSouth?: () => void;
+	onDragEndNorth?: () => void;
+	onDragEndSouth?: () => void;
 }) {
 	const isPointerDown = React.useRef(false);
+	const initialY = React.useRef<number | null>(null);
 
 	const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
 		isPointerDown.current = true;
+		initialY.current = e.clientY;
 		props.onPointerDown?.(e);
 	};
 
+	const handleDragEnd = React.useCallback(
+		(y: number) => {
+			if (initialY.current !== null) {
+				if (y < initialY.current) {
+					onDragEndNorth?.();
+				} else if (y > initialY.current) {
+					onDragEndSouth?.();
+				}
+			}
+			isPointerDown.current = false;
+			initialY.current = null;
+		},
+		[onDragEndNorth, onDragEndSouth],
+	);
+
 	const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-		isPointerDown.current = false;
+		handleDragEnd(e.clientY);
 		props.onPointerUp?.(e);
 	};
 
 	React.useEffect(() => {
-		const handlePointerUpGlobal = () => {
-			isPointerDown.current = false;
+		const handlePointerUpGlobal = (e: PointerEvent) => {
+			if (isPointerDown.current) {
+				handleDragEnd(e.clientY);
+			}
 		};
 		window.addEventListener("pointerup", handlePointerUpGlobal);
 		return () => {
 			window.removeEventListener("pointerup", handlePointerUpGlobal);
 		};
-	}, []);
+	}, [handleDragEnd]);
 
 	const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
 		if (!isPointerDown.current || e.movementY === 0) return;
