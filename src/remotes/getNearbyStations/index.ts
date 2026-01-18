@@ -1,6 +1,6 @@
 import { http } from "@/utils/http";
 
-type GetNearbyStationsRequest = {
+export type GetNearbyStationsRequest = {
 	latitude: number;
 	longitude: number;
 	latitudeDelta: number;

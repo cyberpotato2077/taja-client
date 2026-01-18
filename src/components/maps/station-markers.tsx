@@ -1,5 +1,5 @@
 import { useOverlay } from "@/hooks/use-overlay";
-import { getNearbyStations } from "@/remotes/getNearbyStations";
+import { stationQueryOptions } from "@/queries/station-query-options";
 import { useQuery } from "@tanstack/react-query";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { StationDrawer } from "./station-drawer";
@@ -8,16 +8,14 @@ export function StationMarkers() {
 	const overlay = useOverlay();
 	const map = useMap();
 
-	const { data } = useQuery({
-		queryKey: ["stations"],
-		queryFn: () =>
-			getNearbyStations({
-				latitude: 0,
-				latitudeDelta: 0,
-				longitude: 0,
-				longitudeDelta: 0,
-			}),
-	});
+	const { data } = useQuery(
+		stationQueryOptions.markers({
+			latitude: 0,
+			latitudeDelta: 0,
+			longitude: 0,
+			longitudeDelta: 0,
+		}),
+	);
 
 	if (map == null) {
 		return null;
