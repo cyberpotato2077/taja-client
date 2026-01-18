@@ -1,7 +1,7 @@
 import {
 	type GetNearbyStationsRequest,
 	getNearbyStations,
-} from "@/remotes/getNearbyStations";
+} from "@/remotes/get-nearby-stations";
 import { queryOptions } from "@tanstack/react-query";
 
 export const stationQueryOptions = {

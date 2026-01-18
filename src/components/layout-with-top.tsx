@@ -5,12 +5,14 @@ interface TopProps {
 	title?: string;
 	customButton?: ReactNode;
 	showBackButton?: boolean;
+	children?: ReactNode;
 }
 
 export function LayoutWithTop({
 	title,
 	customButton,
 	showBackButton = true,
+	children,
 }: TopProps) {
 	return (
 		<div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-h-[100vh] max-w-screen-sm bg-white">
@@ -27,16 +29,7 @@ export function LayoutWithTop({
 			</header>
 			{/* header 40px + bottom navigation bar 56px === 96px */}
 			<ScrollArea className="h-[calc(100vh-96px)] overflow-auto bg-white">
-				{Array.from({ length: 50 }, (_, i) => (
-					<div
-						key={`row-${
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-							i
-						}`}
-					>
-						{i}
-					</div>
-				))}
+				{children}
 			</ScrollArea>
 		</div>
 	);
