@@ -1,11 +1,13 @@
 import { useOverlay } from "@/hooks/use-overlay";
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { StationDrawer } from "./station-drawer";
 
 export function StationMarkers() {
 	const overlay = useOverlay();
+	const navigate = useNavigate();
 	const map = useMap();
 
 	const { data } = useQuery(
@@ -40,6 +42,7 @@ export function StationMarkers() {
 								open={isOpen}
 								close={close}
 								stationId={station.stationId}
+								navigate={navigate}
 							/>
 						));
 					}}

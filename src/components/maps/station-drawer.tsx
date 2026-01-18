@@ -1,5 +1,6 @@
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { useQuery } from "@tanstack/react-query";
+import type { useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/button";
 import {
 	Drawer,
@@ -15,7 +16,14 @@ export function StationDrawer({
 	open,
 	close,
 	stationId,
-}: { open: boolean; close: () => void; stationId: number }) {
+	navigate,
+}: {
+	open: boolean;
+	close: () => void;
+	stationId: number;
+
+	navigate: ReturnType<typeof useNavigate>;
+}) {
 	const {
 		data: station,
 		isLoading,
@@ -26,7 +34,18 @@ export function StationDrawer({
 		<Drawer open={open} onOpenChange={close}>
 			<DrawerContent
 				className="max-w-screen-sm !left-1/2 !-translate-x-1/2 w-full"
-				onDragEndNorth={() => alert("Dragged North!")}
+				onDragEndNorth={() => {
+					const id = station?.stationId;
+					if (id != null) {
+						navigate({
+							to: "/station/$id",
+							params: {
+								id: String(id),
+							},
+						});
+						close();
+					}
+				}}
 			>
 				<div className="mx-auto w-full max-w-sm">
 					<DrawerHeader>
@@ -74,7 +93,22 @@ export function StationDrawer({
 					)}
 
 					<DrawerFooter>
-						<Button>Submit</Button>
+						<Button
+							onClick={() => {
+								const id = station?.stationId;
+								if (id != null) {
+									navigate({
+										to: "/station/$id",
+										params: {
+											id: String(id),
+										},
+									});
+									close();
+								}
+							}}
+						>
+							Go to Detail
+						</Button>
 						<DrawerClose asChild>
 							<Button variant="outline">Cancel</Button>
 						</DrawerClose>
