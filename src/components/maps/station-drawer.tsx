@@ -15,7 +15,11 @@ export function StationDrawer({
 }: { open: boolean; close: () => void }) {
 	return (
 		<Drawer open={open} onOpenChange={close}>
-			<DrawerContent className="max-w-screen-sm !left-1/2 !-translate-x-1/2 w-full">
+			<DrawerContent
+				className="max-w-screen-sm !left-1/2 !-translate-x-1/2 w-full"
+				onDragNorth={() => console.log("onDragNorth")}
+				onDragSouth={() => console.log("onDragSouth")}
+			>
 				<div className="mx-auto w-full max-w-sm">
 					<DrawerHeader>
 						<DrawerTitle>DD</DrawerTitle>

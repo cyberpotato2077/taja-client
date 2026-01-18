@@ -1,4 +1,4 @@
-import type * as React from "react";
+import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
@@ -46,8 +46,46 @@ function DrawerOverlay({
 function DrawerContent({
 	className,
 	children,
+	onDragNorth,
+	onDragSouth,
 	...props
-}: React.ComponentProps<typeof DrawerPrimitive.Content>) {
+}: React.ComponentProps<typeof DrawerPrimitive.Content> & {
+	onDragNorth?: () => void;
+	onDragSouth?: () => void;
+}) {
+	const isPointerDown = React.useRef(false);
+
+	const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+		isPointerDown.current = true;
+		props.onPointerDown?.(e);
+	};
+
+	const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+		isPointerDown.current = false;
+		props.onPointerUp?.(e);
+	};
+
+	React.useEffect(() => {
+		const handlePointerUpGlobal = () => {
+			isPointerDown.current = false;
+		};
+		window.addEventListener("pointerup", handlePointerUpGlobal);
+		return () => {
+			window.removeEventListener("pointerup", handlePointerUpGlobal);
+		};
+	}, []);
+
+	const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+		if (!isPointerDown.current || e.movementY === 0) return;
+
+		if (e.movementY < 0) {
+			onDragNorth?.();
+		} else {
+			onDragSouth?.();
+		}
+		props.onPointerMove?.(e);
+	};
+
 	return (
 		<DrawerPortal data-slot="drawer-portal">
 			<DrawerOverlay />
@@ -61,6 +99,9 @@ function DrawerContent({
 					"data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-3/4 data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:sm:max-w-sm",
 					className,
 				)}
+				onPointerDown={handlePointerDown}
+				onPointerUp={handlePointerUp}
+				onPointerMove={handlePointerMove}
 				{...props}
 			>
 				<div className="bg-muted mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
