@@ -1,6 +1,5 @@
-import { parseAsFloat, useQueryStates } from "nuqs";
-
-import { DEFAULT_POSITION, MAP_ID, MAP_RESTRICTION } from "@/constants/maps";
+import { MAP_ID, MAP_RESTRICTION } from "@/constants/maps";
+import { useMainQueryStates } from "@/hooks/use-main-query-states";
 import { getScreen } from "@/utils/maps";
 import {
 	// AdvancedMarker,
@@ -10,18 +9,7 @@ import { CurrentPositionMarker } from "./current-position-marker";
 import { StationMarkers } from "./station-markers";
 
 export function StationMap() {
-	const [coordinates, setCoordinates] = useQueryStates(
-		{
-			latitude: parseAsFloat.withDefault(DEFAULT_POSITION.latitude),
-			longitude: parseAsFloat.withDefault(DEFAULT_POSITION.longitude),
-			latDelta: parseAsFloat,
-			lngDelta: parseAsFloat,
-		},
-		{
-			history: "replace",
-		},
-	);
-
+	const [coordinates, setCoordinates] = useMainQueryStates();
 	return (
 		<GoogleMap
 			className="fixed top-0 max-w-screen-sm w-full h-[100vh]"
