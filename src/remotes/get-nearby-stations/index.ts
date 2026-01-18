@@ -7,7 +7,8 @@ export type GetNearbyStationsRequest = {
 	longitudeDelta: number;
 };
 
-type Station = {
+export type Station = {
+	stationId: number;
 	number: number;
 	bikeCount: number;
 	latitude: number;

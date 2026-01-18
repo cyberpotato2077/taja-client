@@ -1,7 +1,7 @@
 import { http } from "@/utils/http";
 
 export type GetStationRequest = {
-	id: string;
+	id: number;
 };
 
 export interface OperationMode {

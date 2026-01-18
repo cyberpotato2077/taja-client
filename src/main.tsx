@@ -57,11 +57,11 @@ if (rootElement && !rootElement.innerHTML) {
 		const root = ReactDOM.createRoot(rootElement);
 		root.render(
 			<StrictMode>
-				<OverlayProvider>
-					<TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+				<TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+					<OverlayProvider>
 						<RouterProvider router={router} />
-					</TanStackQueryProvider.Provider>
-				</OverlayProvider>
+					</OverlayProvider>
+				</TanStackQueryProvider.Provider>
 			</StrictMode>,
 		);
 	});

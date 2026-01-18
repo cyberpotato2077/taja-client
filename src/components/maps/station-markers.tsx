@@ -36,7 +36,11 @@ export function StationMarkers() {
 							lng: station.longitude,
 						});
 						overlay.open(({ isOpen, close }) => (
-							<StationDrawer open={isOpen} close={close} />
+							<StationDrawer
+								open={isOpen}
+								close={close}
+								stationId={station.stationId}
+							/>
 						));
 					}}
 				/>
