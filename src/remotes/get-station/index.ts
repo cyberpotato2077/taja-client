@@ -4,16 +4,51 @@ export type GetStationRequest = {
 	id: string;
 };
 
-// The user will provide the actual interface later, so I'll create a placeholder.
-export type Station = {
-	id: number;
+export interface OperationMode {
+	mode: "LCD" | "QR";
+	rackCount: number;
+}
+
+export interface BikeCountByHour {
+	hour: number;
+	bikeCount: number;
+}
+
+export interface TodayAvailableBike {
+	timeStamp: string;
+	observedBikeCountByHour: BikeCountByHour[];
+	predictedBikeCountByHour: BikeCountByHour[];
+}
+
+export interface ChatRoomRecentMessage {
+	nickname: string;
+	message: string;
+	isReply: boolean;
+	replyToUserNickname?: string;
+	replyToMessage?: string;
+}
+
+export interface NearbyAvailableStation {
+	stationId: number;
+	number: number;
 	name: string;
+	longitude: number;
+	latitude: number;
+	distance: number;
+}
+
+export interface StationDetail {
+	stationId: number;
+	name: string;
+	address: string;
 	latitude: number;
 	longitude: number;
-	bikeCount: number;
-	createdAt: string;
-};
+	operationMode: OperationMode[];
+	todayAvailableBike: TodayAvailableBike;
+	chatRoomRecentMessages: ChatRoomRecentMessage[];
+	nearbyAvailableStations: NearbyAvailableStation[];
+}
 
 export function getStation(params: GetStationRequest) {
-	return http.get<Station>(`stations/${params.id}`);
+	return http.get<StationDetail>(`/stations/${params.id}`);
 }
