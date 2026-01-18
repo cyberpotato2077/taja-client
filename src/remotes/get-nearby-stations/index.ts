@@ -7,7 +7,7 @@ export type GetNearbyStationsRequest = {
 	longitudeDelta: number;
 };
 
-export type Station = {
+export type Marker = {
 	stationId: number;
 	number: number;
 	bikeCount: number;
@@ -16,7 +16,7 @@ export type Station = {
 	requestedAt: string;
 };
 
-type GetNearbyStationsResponse = Array<Station>;
+type GetNearbyStationsResponse = Array<Marker>;
 
 export function getNearbyStations(params: GetNearbyStationsRequest) {
 	return http.get<GetNearbyStationsResponse>("/stations/map/nearby", {

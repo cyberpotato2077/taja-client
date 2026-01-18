@@ -1,18 +1,18 @@
-import { http, HttpResponse } from "msw";
 import { MAP_RESTRICTION } from "@/constants/maps";
+import { http, HttpResponse } from "msw";
 import type {
-	StationDetail,
-	OperationMode,
 	BikeCountByHour,
 	ChatRoomRecentMessage,
 	NearbyAvailableStation,
+	OperationMode,
+	Station,
 } from "./index";
 
 const getRandomNumber = (min: number, max: number) => {
 	return Math.random() * (max - min) + min;
 };
 
-const createMockStationDetail = (id: number): StationDetail => {
+const createMockStationDetail = (id: number): Station => {
 	// operationMode
 	const operationModes: OperationMode[] = [
 		{ mode: "QR", rackCount: Math.floor(Math.random() * 10) + 5 },
@@ -96,5 +96,5 @@ export const getStationMock = http.get("/api/stations/:id", ({ params }) => {
 		id: stationId,
 	});
 
-	return HttpResponse.json<StationDetail>(createMockStationDetail(stationId));
+	return HttpResponse.json<Station>(createMockStationDetail(stationId));
 });

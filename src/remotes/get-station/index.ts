@@ -37,7 +37,7 @@ export interface NearbyAvailableStation {
 	distance: number;
 }
 
-export interface StationDetail {
+export interface Station {
 	stationId: number;
 	name: string;
 	address: string;
@@ -50,5 +50,5 @@ export interface StationDetail {
 }
 
 export function getStation(params: GetStationRequest) {
-	return http.get<StationDetail>(`/stations/${params.id}`);
+	return http.get<Station>(`/stations/${params.id}`);
 }
