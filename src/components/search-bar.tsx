@@ -7,71 +7,139 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { LOCATIONS } from "@/constants/locations";
+import { useMainQueryStates } from "@/hooks/use-main-query-states";
+import { stationQueryOptions } from "@/queries/station-query-options";
+import { useQuery } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { disassemble } from "es-hangul";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+
+type SearchResult = {
+	id: string;
+	name: string;
+	address: string;
+	latitude: number;
+	longitude: number;
+};
+
+const normalize = (text: string) => disassemble(text.toLowerCase());
 
 export function SearchBar() {
 	const map = useMap();
+	if (!map) return null;
 
-	if (map == null) {
-		return null;
-	}
-
+	const [coordinates] = useMainQueryStates();
 	const [query, setQuery] = useState("");
 
-	const filteredLocations =
-		query.trim() === ""
-			? []
-			: LOCATIONS.filter((location) => {
-					const disassembledQuery = disassemble(query.toLowerCase());
-					const disassembledName = disassemble(location.name.toLowerCase());
-					const disassembledAddress = disassemble(
-						location.address.toLowerCase(),
-					);
-					return (
-						disassembledName.includes(disassembledQuery) ||
-						disassembledAddress.includes(disassembledQuery)
-					);
-				}).slice(0, 5);
+	const normalizedQuery = useMemo(() => normalize(query), [query]);
+
+	const {
+		data: searchedStations,
+		isPending,
+		isError,
+	} = useQuery({
+		...stationQueryOptions.search({
+			keyword: query,
+			lat: coordinates.latitude,
+			lng: coordinates.longitude,
+		}),
+		enabled: query.trim().length > 0,
+	});
+
+	const filteredLocations = useMemo<SearchResult[]>(() => {
+		if (!query.trim()) return [];
+
+		return LOCATIONS.filter((location) => {
+			const name = normalize(location.name);
+			const address = normalize(location.address);
+
+			return (
+				name.includes(normalizedQuery) || address.includes(normalizedQuery)
+			);
+		})
+			.slice(0, 5)
+			.map((location) => ({
+				id: location.name,
+				name: location.name,
+				address: location.address,
+				latitude: location.latitude,
+				longitude: location.longitude,
+			}));
+	}, [query, normalizedQuery]);
+
+	const combinedResults = useMemo<SearchResult[]>(() => {
+		if (!query.trim()) return [];
+
+		const stations: SearchResult[] = (searchedStations ?? []).map(
+			(station) => ({
+				id: String(station.stationId),
+				name: station.name,
+				address: station.address,
+				latitude: station.latitude,
+				longitude: station.longitude,
+			}),
+		);
+
+		const getScore = (name: string) => {
+			const disassembledName = normalize(name);
+			const index = disassembledName.indexOf(normalizedQuery);
+
+			if (index === -1) return Number.POSITIVE_INFINITY;
+
+			// 낮을수록 우선
+			return index * 1000 + disassembledName.length;
+		};
+
+		return [...filteredLocations, ...stations]
+			.sort((a, b) => getScore(a.name) - getScore(b.name))
+			.slice(0, 10);
+	}, [filteredLocations, searchedStations, query, normalizedQuery]);
+
+	const showResults = query.trim().length > 0;
 
 	return (
 		<div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm px-4 z-50">
 			<Command shouldFilter={false}>
-				{/* 입력창 */}
 				<CommandInput
 					placeholder="지역이나 충전소를 검색할 수 있어요."
 					value={query}
 					onValueChange={setQuery}
 					onClear={() => setQuery("")}
 				/>
-				{/* 검색어 있을 때만 목록 표시 */}
-				{query.trim().length > 0 ? (
+
+				{showResults && (
 					<CommandList className="max-h-60 overflow-auto">
 						<CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
-						{filteredLocations.length > 0 ? (
+
+						{(combinedResults.length > 0 || isPending || isError) && (
 							<CommandGroup heading="검색 결과">
-								{filteredLocations.map((location) => (
+								{combinedResults.map((result) => (
 									<CommandItem
-										key={location.name}
+										key={result.id}
 										onSelect={() => {
 											map.panTo({
-												lat: location.latitude,
-												lng: location.longitude,
+												lat: result.latitude,
+												lng: result.longitude,
 											});
+											setQuery("");
 										}}
-										className="flex"
+										className="flex flex-col items-start"
 									>
-										<div>{location.name}</div>
+										<div>{result.name}</div>
 										<div className="text-xs text-gray-500">
-											{location.address}
+											{result.address}
 										</div>
 									</CommandItem>
 								))}
+
+								{isPending && <CommandItem disabled>검색 중...</CommandItem>}
+								{isError && (
+									<CommandItem disabled>오류가 발생했습니다.</CommandItem>
+								)}
 							</CommandGroup>
-						) : null}
+						)}
 					</CommandList>
-				) : null}
+				)}
 			</Command>
 		</div>
 	);
