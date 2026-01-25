@@ -5,6 +5,7 @@ interface TopProps {
 	title?: string;
 	customButton?: ReactNode;
 	showBackButton?: boolean;
+	onBackButtonClick?: () => void;
 	children?: ReactNode;
 }
 
@@ -12,6 +13,7 @@ export function LayoutWithTop({
 	title,
 	customButton,
 	showBackButton = true,
+	onBackButtonClick,
 	children,
 }: TopProps) {
 	return (
@@ -19,7 +21,7 @@ export function LayoutWithTop({
 			<header className="h-[40px] flex justify items-center justify-between px-4 shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
 				<div className="w-1/5">
 					{showBackButton && (
-						<button type="button" className="p-2">
+						<button type="button" className="p-2" onClick={onBackButtonClick}>
 							<ChevronLeftIcon className="h-6 w-6" />
 						</button>
 					)}
