@@ -14,15 +14,24 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { disassemble } from "es-hangul";
 import { useMemo, useState } from "react";
 
+type SearchResult = {
+	id: string;
+	name: string;
+	address: string;
+	latitude: number;
+	longitude: number;
+};
+
+const normalize = (text: string) => disassemble(text.toLowerCase());
+
 export function SearchBar() {
 	const map = useMap();
-
-	if (map == null) {
-		return null;
-	}
+	if (!map) return null;
 
 	const [coordinates] = useMainQueryStates();
 	const [query, setQuery] = useState("");
+
+	const normalizedQuery = useMemo(() => normalize(query), [query]);
 
 	const {
 		data: searchedStations,
@@ -37,55 +46,71 @@ export function SearchBar() {
 		enabled: query.trim().length > 0,
 	});
 
-	const filteredLocations =
-		query.trim() === ""
-			? []
-			: LOCATIONS.filter((location) => {
-					const disassembledQuery = disassemble(query.toLowerCase());
-					const disassembledName = disassemble(location.name.toLowerCase());
-					const disassembledAddress = disassemble(
-						location.address.toLowerCase(),
-					);
-					return (
-						disassembledName.includes(disassembledQuery) ||
-						disassembledAddress.includes(disassembledQuery)
-					);
-				}).slice(0, 5);
+	const filteredLocations = useMemo<SearchResult[]>(() => {
+		if (!query.trim()) return [];
 
-	const combinedResults = useMemo(() => {
-		const locations = filteredLocations.map((location) => ({
-			id: location.name,
-			name: location.name,
-			address: location.address,
-			latitude: location.latitude,
-			longitude: location.longitude,
-		}));
+		return LOCATIONS.filter((location) => {
+			const name = normalize(location.name);
+			const address = normalize(location.address);
 
-		const stations = (searchedStations ?? []).map((station) => ({
-			id: station.stationId,
-			name: station.name,
-			address: station.address,
-			latitude: station.latitude,
-			longitude: station.longitude,
-		}));
+			return (
+				name.includes(normalizedQuery) || address.includes(normalizedQuery)
+			);
+		})
+			.slice(0, 5)
+			.map((location) => ({
+				id: location.name,
+				name: location.name,
+				address: location.address,
+				latitude: location.latitude,
+				longitude: location.longitude,
+			}));
+	}, [query, normalizedQuery]);
 
-		return [...locations, ...stations];
-	}, [filteredLocations, searchedStations]);
+	const combinedResults = useMemo<SearchResult[]>(() => {
+		if (!query.trim()) return [];
+
+		const stations: SearchResult[] = (searchedStations ?? []).map(
+			(station) => ({
+				id: String(station.stationId),
+				name: station.name,
+				address: station.address,
+				latitude: station.latitude,
+				longitude: station.longitude,
+			}),
+		);
+
+		const getScore = (name: string) => {
+			const disassembledName = normalize(name);
+			const index = disassembledName.indexOf(normalizedQuery);
+
+			if (index === -1) return Number.POSITIVE_INFINITY;
+
+			// 낮을수록 우선
+			return index * 1000 + disassembledName.length;
+		};
+
+		return [...filteredLocations, ...stations]
+			.sort((a, b) => getScore(a.name) - getScore(b.name))
+			.slice(0, 10);
+	}, [filteredLocations, searchedStations, query, normalizedQuery]);
+
+	const showResults = query.trim().length > 0;
 
 	return (
 		<div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm px-4 z-50">
 			<Command shouldFilter={false}>
-				{/* 입력창 */}
 				<CommandInput
 					placeholder="지역이나 충전소를 검색할 수 있어요."
 					value={query}
 					onValueChange={setQuery}
 					onClear={() => setQuery("")}
 				/>
-				{/* 검색어 있을 때만 목록 표시 */}
-				{query.trim().length > 0 ? (
+
+				{showResults && (
 					<CommandList className="max-h-60 overflow-auto">
 						<CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
+
 						{(combinedResults.length > 0 || isPending || isError) && (
 							<CommandGroup heading="검색 결과">
 								{combinedResults.map((result) => (
@@ -106,6 +131,7 @@ export function SearchBar() {
 										</div>
 									</CommandItem>
 								))}
+
 								{isPending && <CommandItem disabled>검색 중...</CommandItem>}
 								{isError && (
 									<CommandItem disabled>오류가 발생했습니다.</CommandItem>
@@ -113,7 +139,7 @@ export function SearchBar() {
 							</CommandGroup>
 						)}
 					</CommandList>
-				) : null}
+				)}
 			</Command>
 		</div>
 	);
