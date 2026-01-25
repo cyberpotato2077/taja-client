@@ -2,7 +2,11 @@ import {
 	type GetNearbyStationsRequest,
 	getNearbyStations,
 } from "@/remotes/get-nearby-stations";
-import { getStation, type GetStationRequest } from "@/remotes/get-station";
+import { type GetStationRequest, getStation } from "@/remotes/get-station";
+import {
+	type SearchStationsRequest,
+	searchStations,
+} from "@/remotes/search-stations";
 import { queryOptions } from "@tanstack/react-query";
 
 export const stationQueryOptions = {
@@ -17,6 +21,12 @@ export const stationQueryOptions = {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "detail", params.id],
 			queryFn: () => getStation(params),
+		});
+	},
+	search: (params: SearchStationsRequest) => {
+		return queryOptions({
+			queryKey: [...stationQueryOptions.station, "search", params],
+			queryFn: () => searchStations(params),
 		});
 	},
 };

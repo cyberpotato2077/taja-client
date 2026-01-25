@@ -7,6 +7,9 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { LOCATIONS } from "@/constants/locations";
+import { useMainQueryStates } from "@/hooks/use-main-query-states";
+import { stationQueryOptions } from "@/queries/station-query-options";
+import { useQuery } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { disassemble } from "es-hangul";
 import { useState } from "react";
@@ -18,7 +21,21 @@ export function SearchBar() {
 		return null;
 	}
 
+	const [coordinates, setCoordinates] = useMainQueryStates();
 	const [query, setQuery] = useState("");
+
+	const {
+		data: searchedStations,
+		isPending,
+		isError,
+	} = useQuery({
+		...stationQueryOptions.search({
+			keyword: query,
+			lat: coordinates.latitude,
+			lng: coordinates.longitude,
+		}),
+		enabled: query.trim().length > 0,
+	});
 
 	const filteredLocations =
 		query.trim() === ""
@@ -51,23 +68,29 @@ export function SearchBar() {
 						<CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
 						{filteredLocations.length > 0 ? (
 							<CommandGroup heading="검색 결과">
-								{filteredLocations.map((location) => (
-									<CommandItem
-										key={location.name}
-										onSelect={() => {
-											map.panTo({
-												lat: location.latitude,
-												lng: location.longitude,
-											});
-										}}
-										className="flex"
-									>
-										<div>{location.name}</div>
-										<div className="text-xs text-gray-500">
-											{location.address}
-										</div>
-									</CommandItem>
-								))}
+								{isError ? (
+									<></>
+								) : isPending ? (
+									<></>
+								) : (
+									filteredLocations.map((location) => (
+										<CommandItem
+											key={location.name}
+											onSelect={() => {
+												map.panTo({
+													lat: location.latitude,
+													lng: location.longitude,
+												});
+											}}
+											className="flex"
+										>
+											<div>{location.name}</div>
+											<div className="text-xs text-gray-500">
+												{location.address}
+											</div>
+										</CommandItem>
+									))
+								)}
 							</CommandGroup>
 						) : null}
 					</CommandList>
