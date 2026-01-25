@@ -12,18 +12,19 @@ import {
 	DrawerTitle,
 } from "../ui/drawer";
 
+type StationDrawerProps = {
+	open: boolean;
+	close: () => void;
+	stationId: number;
+	navigate: ReturnType<typeof useNavigate>;
+};
+
 export function StationDrawer({
 	open,
 	close,
 	stationId,
 	navigate,
-}: {
-	open: boolean;
-	close: () => void;
-	stationId: number;
-
-	navigate: ReturnType<typeof useNavigate>;
-}) {
+}: StationDrawerProps) {
 	const {
 		data: station,
 		isLoading,
@@ -31,7 +32,12 @@ export function StationDrawer({
 	} = useQuery(stationQueryOptions.detail({ id: stationId }));
 
 	return (
-		<Drawer open={open} onOpenChange={close}>
+		<Drawer
+			open={open}
+			onOpenChange={() => {
+				close();
+			}}
+		>
 			<DrawerContent
 				className="max-w-screen-sm !left-1/2 !-translate-x-1/2 w-full"
 				onDragEndNorth={() => {
