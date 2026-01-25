@@ -64,7 +64,13 @@ export function StationDrawer({
 					)}
 
 					<DrawerFooter>
+						<DrawerClose asChild>
+							<Button className="flex-1" variant="outline">
+								닫기
+							</Button>
+						</DrawerClose>
 						<Button
+							className="flex-1"
 							onClick={() => {
 								const id = station?.stationId;
 								if (id != null) {
@@ -80,9 +86,6 @@ export function StationDrawer({
 						>
 							자세히 보기
 						</Button>
-						<DrawerClose asChild>
-							<Button variant="outline">닫기</Button>
-						</DrawerClose>
 					</DrawerFooter>
 				</div>
 			</DrawerContent>
