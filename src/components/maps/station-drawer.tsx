@@ -78,10 +78,10 @@ export function StationDrawer({
 								}
 							}}
 						>
-							Go to Detail
+							자세히 보기
 						</Button>
 						<DrawerClose asChild>
-							<Button variant="outline">Cancel</Button>
+							<Button variant="outline">닫기</Button>
 						</DrawerClose>
 					</DrawerFooter>
 				</div>
