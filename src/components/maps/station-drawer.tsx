@@ -3,15 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { useNavigate } from "@tanstack/react-router";
 import { StationDetail } from "../station-detail";
 import { Button } from "../ui/button";
-import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-} from "../ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter } from "../ui/drawer";
 
 type StationDrawerProps = {
 	open: boolean;
