@@ -1,37 +1,36 @@
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { useQuery } from "@tanstack/react-query";
 import type { useNavigate } from "@tanstack/react-router";
+import { StationDetail } from "../station-detail";
 import { Button } from "../ui/button";
-import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-} from "../ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter } from "../ui/drawer";
+
+type StationDrawerProps = {
+	open: boolean;
+	close: () => void;
+	stationId: number;
+	navigate: ReturnType<typeof useNavigate>;
+};
 
 export function StationDrawer({
 	open,
 	close,
 	stationId,
 	navigate,
-}: {
-	open: boolean;
-	close: () => void;
-	stationId: number;
-
-	navigate: ReturnType<typeof useNavigate>;
-}) {
+}: StationDrawerProps) {
 	const {
 		data: station,
-		isLoading,
-		error,
+		isPending,
+		isError,
 	} = useQuery(stationQueryOptions.detail({ id: stationId }));
 
 	return (
-		<Drawer open={open} onOpenChange={close}>
+		<Drawer
+			open={open}
+			onOpenChange={() => {
+				close();
+			}}
+		>
 			<DrawerContent
 				className="max-w-screen-sm !left-1/2 !-translate-x-1/2 w-full"
 				onDragEndNorth={() => {
@@ -47,53 +46,23 @@ export function StationDrawer({
 					}
 				}}
 			>
-				<div className="mx-auto w-full max-w-sm">
-					<DrawerHeader>
-						<DrawerTitle>
-							{isLoading
-								? "Loading..."
-								: error
-									? "Error"
-									: station?.name || "Station Details"}
-						</DrawerTitle>
-						<DrawerDescription>
-							{error
-								? error.message
-								: station?.address || "No station selected"}
-						</DrawerDescription>
-					</DrawerHeader>
-
-					{station && !isLoading && !error && (
-						<div className="p-4 pb-0 text-sm text-gray-700">
-							<p>
-								Latitude:{" "}
-								<span className="font-medium">{station.latitude}</span>
-							</p>
-							<p>
-								Longitude:{" "}
-								<span className="font-medium">{station.longitude}</span>
-							</p>
-							<p>
-								Available Bikes (Observed):{" "}
-								<span className="font-medium">
-									{station.todayAvailableBike?.observedBikeCountByHour?.slice(
-										-1,
-									)[0]?.bikeCount ?? "N/A"}
-								</span>
-							</p>
-							<p>
-								Available Bikes (Predicted):{" "}
-								<span className="font-medium">
-									{station.todayAvailableBike?.predictedBikeCountByHour?.slice(
-										-1,
-									)[0]?.bikeCount ?? "N/A"}
-								</span>
-							</p>
-						</div>
+				<div className="mx-auto w-full">
+					{isError ? (
+						<></>
+					) : isPending ? (
+						<></>
+					) : (
+						<StationDetail station={station} />
 					)}
 
 					<DrawerFooter>
+						<DrawerClose asChild>
+							<Button className="flex-1" variant="outline">
+								닫기
+							</Button>
+						</DrawerClose>
 						<Button
+							className="flex-1"
 							onClick={() => {
 								const id = station?.stationId;
 								if (id != null) {
@@ -107,11 +76,8 @@ export function StationDrawer({
 								}
 							}}
 						>
-							Go to Detail
+							자세히 보기
 						</Button>
-						<DrawerClose asChild>
-							<Button variant="outline">Cancel</Button>
-						</DrawerClose>
 					</DrawerFooter>
 				</div>
 			</DrawerContent>
