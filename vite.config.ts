@@ -19,8 +19,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'Taja Client',
-        short_name: 'Taja',
+        name: '타자',
+        short_name: '타자',
         description: 'Taja Client Application',
         theme_color: '#ffffff',
         background_color: '#ffffff',
