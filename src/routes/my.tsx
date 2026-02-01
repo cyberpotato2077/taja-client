@@ -32,6 +32,14 @@ function RouteComponent() {
 				<Button onClick={handleSignupClick} className="w-full">
 					회원가입
 				</Button>
+
+				<Button
+					onClick={() => router.navigate({ to: "/login" })}
+					variant="outline"
+					className="w-full"
+				>
+					로그인
+				</Button>
 			</div>
 		</LayoutWithTop>
 	);
