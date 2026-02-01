@@ -1,6 +1,6 @@
 {
-  "short_name": "TanStack App",
-  "name": "Create TanStack App Sample",
+  "short_name": "타자",
+  "name": "타자: 서울시 공유자전거 조회 앱",
   "icons": [
     {
       "src": "favicon.ico",
