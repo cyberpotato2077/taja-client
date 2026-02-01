@@ -1,5 +1,4 @@
 import { http } from "@/utils/http";
-import { queryOptions } from "@tanstack/react-query";
 
 export interface LoginRequest {
 	email: string;
@@ -63,47 +62,3 @@ export function sendEmail(request: EmailRequest) {
 export function verifyEmail(request: VerifyEmailRequest) {
 	return http.post<string>("/auth/email/verify", request);
 }
-
-export const loginQueryOptions = (request: LoginRequest) =>
-	queryOptions({
-		queryKey: ["auth", "login", request],
-		queryFn: () => login(request),
-	});
-
-export const signupQueryOptions = (request: SignUpRequest) =>
-	queryOptions({
-		queryKey: ["auth", "signup", request],
-		queryFn: () => signup(request),
-	});
-
-export const logoutQueryOptions = () =>
-	queryOptions({
-		queryKey: ["auth", "logout"],
-		queryFn: () => logout(),
-	});
-
-export const reissueTokenQueryOptions = () =>
-	queryOptions({
-		queryKey: ["auth", "reissue-token"],
-		queryFn: () => reissueToken(),
-	});
-
-export const checkNameDuplicateQueryOptions = (
-	request: CheckDuplicateNameRequest,
-) =>
-	queryOptions({
-		queryKey: ["auth", "check-name-duplicate", request],
-		queryFn: () => checkNameDuplicate(request),
-	});
-
-export const sendEmailQueryOptions = (request: EmailRequest) =>
-	queryOptions({
-		queryKey: ["auth", "send-email", request],
-		queryFn: () => sendEmail(request),
-	});
-
-export const verifyEmailQueryOptions = (request: VerifyEmailRequest) =>
-	queryOptions({
-		queryKey: ["auth", "verify-email", request],
-		queryFn: () => verifyEmail(request),
-	});
