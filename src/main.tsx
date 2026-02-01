@@ -10,9 +10,12 @@ import { routeTree } from "./routeTree.gen";
 import "./styles.css";
 import { OverlayProvider } from "overlay-kit";
 import reportWebVitals from "./reportWebVitals.ts";
+import { getMSWState } from "./utils/msw-toggle";
 
 async function enableMocking() {
-	if (process.env.NODE_ENV !== "development") {
+	const mswEnabled = getMSWState();
+
+	if (!mswEnabled) {
 		return;
 	}
 
