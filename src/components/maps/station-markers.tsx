@@ -17,9 +17,9 @@ export function StationMarkers() {
 	const { data } = useQuery(
 		stationQueryOptions.markers({
 			latitude: 0,
-			latitudeDelta: 0,
+			latDelta: 0,
 			longitude: 0,
-			longitudeDelta: 0,
+			lngDelta: 0,
 		}),
 	);
 
