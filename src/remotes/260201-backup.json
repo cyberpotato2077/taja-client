@@ -1,0 +1,1630 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Taja API",
+		"description": "Taja API Documentation",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:8080",
+			"description": "Generated server url"
+		}
+	],
+	"tags": [
+		{
+			"name": "healthcheck",
+			"description": "healthcheck API"
+		},
+		{
+			"name": "Station Status",
+			"description": "Station Status API"
+		},
+		{
+			"name": "Station",
+			"description": "Station API"
+		},
+		{
+			"name": "Weather",
+			"description": "Weather API"
+		},
+		{
+			"name": "Statistics",
+			"description": "Statistics API"
+		},
+		{
+			"name": "Post",
+			"description": "Post API"
+		},
+		{
+			"name": "Member",
+			"description": "Member API"
+		}
+	],
+	"paths": {
+		"/weather/upload": {
+			"post": {
+				"tags": ["Weather"],
+				"summary": "초단기실황 날씨 업로드",
+				"description": "자치구별 초단기실황 날씨 정보를 수집하여 저장합니다.",
+				"operationId": "readWeatherHistories",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/weather/district/upload": {
+			"post": {
+				"tags": ["Weather"],
+				"summary": "자치구 지점 좌표 업로드",
+				"description": "자치구 지점 좌표 정보를 수집하여 저장합니다.",
+				"operationId": "readDistrictPointFile",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": ["file"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/statistics/temperature": {
+			"post": {
+				"tags": ["Statistics"],
+				"summary": "기온별 통계 계산",
+				"description": "해당 날짜의 기온별 통계를 계산하여 업데이트합니다.",
+				"operationId": "calculateTemperatureStatistics",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StatisticsRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/statistics/hourly": {
+			"post": {
+				"tags": ["Statistics"],
+				"summary": "시간대별 통계 계산",
+				"description": "해당 날짜의 시간대별 통계를 계산하여 업데이트합니다.",
+				"operationId": "calculateHourlyStatistics",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StatisticsRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/statistics/day-of-week": {
+			"post": {
+				"tags": ["Statistics"],
+				"summary": "요일별 통계 계산",
+				"description": "해당 날짜의 요일별 통계를 계산하여 업데이트합니다.",
+				"operationId": "calculateDayOfWeekStatistics",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StatisticsRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/{stationId}/posts": {
+			"get": {
+				"tags": ["Station"],
+				"summary": "게시글 목록 조회",
+				"description": "대여소 ID로 해당 게시판의 게시글 목록을 조회합니다.",
+				"operationId": "getPosts",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "sort",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "cursor",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"default": 20
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponsePostListResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Station"],
+				"summary": "게시글 작성",
+				"description": "대여소 ID로 해당 게시판에 게시글을 작성합니다.",
+				"operationId": "createPost",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePostRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/{stationId}/posts/join": {
+			"post": {
+				"tags": ["Station"],
+				"summary": "게시판 참여",
+				"description": "대여소 ID로 해당 대여소 게시판에 참여합니다.",
+				"operationId": "joinBoard",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/{stationId}/favorite": {
+			"get": {
+				"tags": ["Station"],
+				"summary": "즐겨찾기 여부 조회",
+				"description": "대여소 ID를 이용해 해당 대여소가 즐겨찾기에 등록되어 있는지 여부를 조회합니다.",
+				"operationId": "isFavoriteStation",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseIsFavoriteStationResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Station"],
+				"summary": "즐겨찾기 등록",
+				"description": "대여소 ID를 이용해 해당 대여소를 즐겨찾기에 등록합니다.",
+				"operationId": "addFavoriteStation",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Station"],
+				"summary": "즐겨찾기 삭제",
+				"description": "대여소 ID를 이용해 해당 대여소를 즐겨찾기에서 삭제합니다.",
+				"operationId": "deleteFavoriteStation",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/upload": {
+			"post": {
+				"tags": ["Station"],
+				"summary": "대여소 파일 업로드",
+				"description": "엑셀 파일을 업로드하여 대여소 정보를 등록 및 수정합니다.",
+				"operationId": "readStationFile",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": ["file"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/station-status/upload": {
+			"post": {
+				"tags": ["Station Status"],
+				"summary": "대여소 실시간 상태 업로드",
+				"description": "대여소 실시간 상태 정보를 수집하여 저장합니다.",
+				"operationId": "readStationStatus",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/posts/{postId}/like": {
+			"post": {
+				"tags": ["Post"],
+				"summary": "게시글 좋아요 등록",
+				"description": "게시글에 좋아요를 등록합니다.",
+				"operationId": "likePost",
+				"parameters": [
+					{
+						"name": "postId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponsePostLikeResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Post"],
+				"summary": "게시글 좋아요 취소",
+				"description": "게시글 좋아요를 취소합니다.",
+				"operationId": "unlikePost",
+				"parameters": [
+					{
+						"name": "postId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponsePostLikeResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/posts/{postId}/comments": {
+			"post": {
+				"tags": ["Post"],
+				"summary": "댓글 작성",
+				"description": "게시글 ID로 댓글을 작성합니다.",
+				"operationId": "createComment",
+				"parameters": [
+					{
+						"name": "postId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateCommentRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/token": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "토큰 재발급",
+				"description": "리프레시 토큰 유효성 검사 후 액세스 토큰을 재발급합니다.",
+				"operationId": "reissueToken",
+				"parameters": [
+					{
+						"name": "refreshToken",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseTokenResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/signup": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "회원가입",
+				"description": "이름, 이메일, 비밀번호로 회원가입을 합니다.",
+				"operationId": "signup",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SignUpRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/name/duplicate-check": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "이름 중복 확인",
+				"description": "이름이 중복되었는지 확인합니다.",
+				"operationId": "checkNameDuplicate",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckDuplicateNameRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseCheckDuplicateNameResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "로그아웃",
+				"description": "리프레시 토큰을 삭제하여 로그아웃합니다.",
+				"operationId": "logout",
+				"parameters": [
+					{
+						"name": "refreshToken",
+						"in": "cookie",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "로그인",
+				"description": "이메일, 비밀번호로 로그인합니다.",
+				"operationId": "login",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseTokenResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/email/verify": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "이메일 인증 코드 검증",
+				"description": "이메일과 인증 코드를 검증합니다.",
+				"operationId": "validateEmailCode",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/VerifyEmailRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/email/send": {
+			"post": {
+				"tags": ["Member"],
+				"summary": "이메일 인증 요청",
+				"description": "이메일로 인증 코드를 전송합니다.",
+				"operationId": "sendEmail",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EmailRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/{stationId}": {
+			"get": {
+				"tags": ["Station"],
+				"summary": "대여소 상세 조회",
+				"description": "대여소 ID를 이용해 대여소의 상세 정보를 조회합니다.",
+				"operationId": "findStationDetail",
+				"parameters": [
+					{
+						"name": "stationId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseStationDetailResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/map/search": {
+			"get": {
+				"tags": ["Station"],
+				"summary": "대여소 검색",
+				"description": "키워드와 지도 중심 좌표를 이용해 대여소를 검색합니다.",
+				"operationId": "searchStation",
+				"parameters": [
+					{
+						"name": "searchStationRequest",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/SearchStationRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseListStationSimpleResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/map/nearby": {
+			"get": {
+				"tags": ["Station"],
+				"summary": "근처 대여소 조회",
+				"description": "지도 중심 좌표와 화면에 보이는 영역의 위도, 경도 차이를 이용해 근처 대여소를 조회합니다.",
+				"operationId": "findNearbyStations",
+				"parameters": [
+					{
+						"name": "nearbyStationRequest",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/NearbyStationRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseListMapStationResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stations/map/favorite": {
+			"get": {
+				"tags": ["Station"],
+				"summary": "즐겨찾기 대여소 조회",
+				"description": "회원이 즐겨찾기에 등록한 대여소 목록을 조회합니다.",
+				"operationId": "findFavoriteStations",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseListMapStationResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/posts/{postId}": {
+			"get": {
+				"tags": ["Post"],
+				"summary": "게시글 상세 조회",
+				"description": "게시글 ID로 게시글 상세 정보를 조회합니다.",
+				"operationId": "getPostDetail",
+				"parameters": [
+					{
+						"name": "postId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponsePostDetailResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Post"],
+				"summary": "게시글 삭제",
+				"description": "게시글 ID로 게시글을 삭제합니다.",
+				"operationId": "deletePost",
+				"parameters": [
+					{
+						"name": "postId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/health": {
+			"get": {
+				"tags": ["healthcheck"],
+				"summary": "health check",
+				"description": "서버 상태 확인",
+				"operationId": "healthCheck",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/posts/comments/{commentId}": {
+			"delete": {
+				"tags": ["Post"],
+				"summary": "댓글 삭제",
+				"description": "댓글 ID로 댓글을 삭제합니다.",
+				"operationId": "deleteComment",
+				"parameters": [
+					{
+						"name": "commentId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/CommonApiResponseString"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CommonApiResponseString": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "string"
+					}
+				}
+			},
+			"StatisticsRequest": {
+				"type": "object",
+				"properties": {
+					"requestedAt": {
+						"type": "string",
+						"format": "date"
+					}
+				},
+				"required": ["requestedAt"]
+			},
+			"CreatePostRequest": {
+				"type": "object",
+				"properties": {
+					"content": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": ["content"]
+			},
+			"CommonApiResponsePostLikeResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/PostLikeResponse"
+					}
+				}
+			},
+			"PostLikeResponse": {
+				"type": "object",
+				"properties": {
+					"postId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"likeCount": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"CreateCommentRequest": {
+				"type": "object",
+				"properties": {
+					"content": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": ["content"]
+			},
+			"CommonApiResponseTokenResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/TokenResponse"
+					}
+				}
+			},
+			"TokenResponse": {
+				"type": "object",
+				"properties": {
+					"accessToken": {
+						"type": "string"
+					}
+				}
+			},
+			"SignUpRequest": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1
+					},
+					"email": {
+						"type": "string",
+						"format": "email",
+						"minLength": 1
+					},
+					"password": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 4
+					}
+				},
+				"required": ["email", "name", "password"]
+			},
+			"CheckDuplicateNameRequest": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"minLength": 1,
+						"pattern": "^[a-zA-Z0-9가-힣]{1,8}$"
+					}
+				},
+				"required": ["name"]
+			},
+			"CheckDuplicateNameResponse": {
+				"type": "object",
+				"properties": {
+					"isDuplicate": {
+						"type": "boolean"
+					}
+				}
+			},
+			"CommonApiResponseCheckDuplicateNameResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/CheckDuplicateNameResponse"
+					}
+				}
+			},
+			"LoginRequest": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email",
+						"minLength": 1
+					},
+					"password": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 4
+					}
+				},
+				"required": ["email", "password"]
+			},
+			"VerifyEmailRequest": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email",
+						"minLength": 1
+					},
+					"code": {
+						"type": "string",
+						"minLength": 1
+					}
+				},
+				"required": ["code", "email"]
+			},
+			"EmailRequest": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email",
+						"minLength": 1
+					}
+				},
+				"required": ["email"]
+			},
+			"BikeCountByTimeResponse": {
+				"type": "object",
+				"properties": {
+					"hour": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"bikeCount": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"CommonApiResponseStationDetailResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/StationDetailResponse"
+					}
+				}
+			},
+			"NearbyAvailableStationDetailResponse": {
+				"type": "object",
+				"properties": {
+					"stationId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"number": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"distance": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"OperationModeResponse": {
+				"type": "object",
+				"properties": {
+					"mode": {
+						"type": "string"
+					},
+					"rackCount": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"RecentPostResponse": {
+				"type": "object",
+				"properties": {
+					"writer": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					}
+				}
+			},
+			"StationDetailResponse": {
+				"type": "object",
+				"properties": {
+					"stationId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"number": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"operationMode": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/OperationModeResponse"
+						}
+					},
+					"todayAvailableBike": {
+						"$ref": "#/components/schemas/TodayAvailableBikeResponse"
+					},
+					"recentPosts": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RecentPostResponse"
+						}
+					},
+					"nearbyAvailableStations": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/NearbyAvailableStationDetailResponse"
+						}
+					}
+				}
+			},
+			"TodayAvailableBikeResponse": {
+				"type": "object",
+				"properties": {
+					"timeStamp": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"observedBikeCountByHour": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BikeCountByTimeResponse"
+						}
+					},
+					"predictedBikeCountByHour": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/BikeCountByTimeResponse"
+						}
+					}
+				}
+			},
+			"CommonApiResponsePostListResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/PostListResponse"
+					}
+				}
+			},
+			"PostItemResponse": {
+				"type": "object",
+				"properties": {
+					"stationId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"postId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"writer": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"content": {
+						"type": "string"
+					},
+					"commentCount": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"likeCount": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"liked": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PostListResponse": {
+				"type": "object",
+				"properties": {
+					"posts": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PostItemResponse"
+						}
+					},
+					"nextCursor": {
+						"type": "string"
+					}
+				}
+			},
+			"CommonApiResponseIsFavoriteStationResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/IsFavoriteStationResponse"
+					}
+				}
+			},
+			"IsFavoriteStationResponse": {
+				"type": "object",
+				"properties": {
+					"isFavorite": {
+						"type": "boolean"
+					}
+				}
+			},
+			"SearchStationRequest": {
+				"type": "object",
+				"properties": {
+					"keyword": {
+						"type": "string",
+						"minLength": 1
+					},
+					"lat": {
+						"type": "number",
+						"format": "double",
+						"maximum": 90,
+						"minimum": -90
+					},
+					"lng": {
+						"type": "number",
+						"format": "double",
+						"maximum": 180,
+						"minimum": -180
+					}
+				},
+				"required": ["keyword", "lat", "lng"]
+			},
+			"CommonApiResponseListStationSimpleResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/StationSimpleResponse"
+						}
+					}
+				}
+			},
+			"StationSimpleResponse": {
+				"type": "object",
+				"properties": {
+					"stationId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"name": {
+						"type": "string"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"address": {
+						"type": "string"
+					},
+					"distance": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"NearbyStationRequest": {
+				"type": "object",
+				"properties": {
+					"latitude": {
+						"type": "number",
+						"format": "double",
+						"maximum": 90,
+						"minimum": -90
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double",
+						"maximum": 180,
+						"minimum": -180
+					},
+					"latDelta": {
+						"type": "number",
+						"format": "double",
+						"minimum": 0
+					},
+					"lngDelta": {
+						"type": "number",
+						"format": "double",
+						"minimum": 0
+					}
+				}
+			},
+			"CommonApiResponseListMapStationResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/MapStationResponse"
+						}
+					}
+				}
+			},
+			"MapStationResponse": {
+				"type": "object",
+				"properties": {
+					"stationId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"latitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"longitude": {
+						"type": "number",
+						"format": "double"
+					},
+					"bikeCount": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"requestedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"CommentItemResponse": {
+				"type": "object",
+				"properties": {
+					"commentId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"writer": {
+						"type": "string"
+					},
+					"content": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"CommonApiResponsePostDetailResponse": {
+				"type": "object",
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/PostDetailResponse"
+					}
+				}
+			},
+			"PostDetailResponse": {
+				"type": "object",
+				"properties": {
+					"postId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"writer": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"content": {
+						"type": "string"
+					},
+					"likeCount": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"commentCount": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"comments": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/CommentItemResponse"
+						}
+					},
+					"liked": {
+						"type": "boolean"
+					}
+				}
+			}
+		}
+	}
+}
