@@ -1,3 +1,4 @@
+import { getFavoriteStations } from "@/remotes/get-favorite-stations";
 import {
 	type GetNearbyStationsRequest,
 	getNearbyStations,
@@ -27,6 +28,12 @@ export const stationQueryOptions = {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "search", params],
 			queryFn: () => searchStations(params),
+		});
+	},
+	favorites: () => {
+		return queryOptions({
+			queryKey: [...stationQueryOptions.station, "favorites"],
+			queryFn: () => getFavoriteStations(),
 		});
 	},
 };
