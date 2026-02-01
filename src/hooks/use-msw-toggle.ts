@@ -1,8 +1,10 @@
 import { getMSWState, setMSWState } from "@/utils/msw-toggle";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export function useMSWToggle() {
 	const [isEnabled, setIsEnabled] = useState(getMSWState());
+	const queryClient = useQueryClient();
 
 	useEffect(() => {
 		setIsEnabled(getMSWState());
@@ -36,6 +38,9 @@ export function useMSWToggle() {
 				setIsEnabled(true);
 			}
 		}
+
+		queryClient.clear();
+		await queryClient.refetchQueries();
 	};
 
 	return { isEnabled, toggleMSW };
