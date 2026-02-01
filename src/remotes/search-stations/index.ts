@@ -10,9 +10,9 @@ export type SearchStationsRequest = {
 };
 
 export type Station = {
-	/** 대여소 ID */
+	/** 대여소 ID (타자 자체 아이디) */
 	stationId: number;
-	/** 대여소 number */
+	/** 대여소 number (서울시에서 정해준 아이디) */
 	number: number;
 	/** 대여소명 */
 	name: string;
