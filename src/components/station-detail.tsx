@@ -111,46 +111,41 @@ export function StationDetail({ station }: { station: Station }) {
 			)}
 
 			{/* Recent Messages */}
-			{station.chatRoomRecentMessages &&
-				station.chatRoomRecentMessages.length > 0 && (
-					<div>
-						<div className="flex items-center gap-2 mb-2">
-							<MessageCircle className="w-4 h-4 text-gray-600" />
-							<h3 className="text-sm font-semibold text-gray-700">
-								최근 메시지
-							</h3>
-							<span className="text-xs text-gray-500">
-								({station.chatRoomRecentMessages.length})
-							</span>
-						</div>
-						<div className="space-y-2 max-h-32 overflow-y-auto">
-							{station.chatRoomRecentMessages
-								.slice(0, 3)
-								.map((message, index) => (
-									<div key={index} className="bg-gray-50 rounded-lg p-2">
-										<div className="flex items-start gap-2">
-											<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-												{message.nickname?.[0]?.toUpperCase() || "U"}
-											</div>
-											<div className="flex-1 min-w-0">
-												<div className="text-xs font-medium text-gray-700">
-													{message.nickname}
-												</div>
-												<div className="text-xs text-gray-600 truncate">
-													{message.message}
-												</div>
-												{message.isReply && message.replyToUserNickname && (
-													<div className="text-xs text-blue-600 mt-1">
-														↳ {message.replyToUserNickname}에게 답장
-													</div>
-												)}
-											</div>
-										</div>
-									</div>
-								))}
-						</div>
+			{station.recentPosts && station.recentPosts.length > 0 && (
+				<div>
+					<div className="flex items-center gap-2 mb-2">
+						<MessageCircle className="w-4 h-4 text-gray-600" />
+						<h3 className="text-sm font-semibold text-gray-700">최근 메시지</h3>
+						<span className="text-xs text-gray-500">
+							({station.recentPosts.length})
+						</span>
 					</div>
-				)}
+					<div className="space-y-2 max-h-32 overflow-y-auto">
+						{station.recentPosts.slice(0, 3).map((message, index) => (
+							<div key={index} className="bg-gray-50 rounded-lg p-2">
+								<div className="flex items-start gap-2">
+									<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+										{message.writer?.[0]?.toUpperCase() || "U"}
+									</div>
+									<div className="flex-1 min-w-0">
+										<div className="text-xs font-medium text-gray-700">
+											{message.writer}
+										</div>
+										<div className="text-xs text-gray-600 truncate">
+											{message.message}
+										</div>
+										{message.isReply && message.replyToUserNickname && (
+											<div className="text-xs text-blue-600 mt-1">
+												↳ {message.replyToUserNickname}에게 답장
+											</div>
+										)}
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
 
 			{/* Nearby Stations */}
 			{station.nearbyAvailableStations &&

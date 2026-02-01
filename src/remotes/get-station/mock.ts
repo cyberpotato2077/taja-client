@@ -2,9 +2,9 @@ import { MAP_RESTRICTION } from "@/constants/maps";
 import { http, HttpResponse } from "msw";
 import type {
 	BikeCountByHour,
-	ChatRoomRecentMessage,
 	NearbyAvailableStation,
 	OperationMode,
+	RecentPost,
 	Station,
 } from "./index";
 
@@ -44,18 +44,12 @@ const createMockStationDetail = (id: number): Station => {
 	);
 
 	// chatRoomRecentMessages
-	const chatRoomRecentMessages: ChatRoomRecentMessage[] = Array.from(
+	const chatRoomRecentMessages: RecentPost[] = Array.from(
 		{ length: 3 },
-		(_, i) => {
-			const isReply = Math.random() > 0.5;
-			return {
-				nickname: `user_${i}`,
-				message: `message ${i}`,
-				isReply,
-				replyToUserNickname: isReply ? `user_replied_${i}` : undefined,
-				replyToMessage: isReply ? `message_replied_${i}` : undefined,
-			};
-		},
+		(_, i) => ({
+			writer: `user_${i}`,
+			message: `message ${i}`,
+		}),
 	);
 
 	// nearbyAvailableStations
@@ -83,7 +77,7 @@ const createMockStationDetail = (id: number): Station => {
 			observedBikeCountByHour,
 			predictedBikeCountByHour,
 		},
-		chatRoomRecentMessages,
+		recentPosts: chatRoomRecentMessages,
 		nearbyAvailableStations,
 	};
 };
