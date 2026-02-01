@@ -7,8 +7,8 @@ export const DEFAULT_POSITION = {
 };
 
 export const MAP_RESTRICTION = {
-	north: 43,
-	south: 33,
-	west: 125,
-	east: 132,
+	north: 37.7,
+	south: 37.4,
+	west: 126.8,
+	east: 127.2,
 };
