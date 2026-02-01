@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useMSWToggle } from "@/hooks/use-msw-toggle";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/my")({
 	component: RouteComponent,
@@ -11,6 +11,11 @@ export const Route = createFileRoute("/my")({
 
 function RouteComponent() {
 	const { isEnabled, toggleMSW } = useMSWToggle();
+	const router = useRouter();
+
+	const handleSignupClick = () => {
+		router.navigate({ to: "/signup" });
+	};
 
 	return (
 		<LayoutWithTop showBackButton title="My" customButton={<Button>hi</Button>}>
@@ -23,6 +28,10 @@ function RouteComponent() {
 					/>
 					<Label htmlFor="msw-toggle">MSW (Mock Service Worker)</Label>
 				</div>
+
+				<Button onClick={handleSignupClick} className="w-full">
+					회원가입
+				</Button>
 			</div>
 		</LayoutWithTop>
 	);

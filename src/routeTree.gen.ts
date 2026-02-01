@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StatisticsRouteImport } from './routes/statistics'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as MyRouteImport } from './routes/my'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StationIdRouteImport } from './routes/station/$id'
@@ -17,6 +18,11 @@ import { Route as StationIdRouteImport } from './routes/station/$id'
 const StatisticsRoute = StatisticsRouteImport.update({
   id: '/statistics',
   path: '/statistics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyRoute = MyRouteImport.update({
@@ -38,12 +44,14 @@ const StationIdRoute = StationIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/my': typeof MyRoute
+  '/signup': typeof SignupRoute
   '/statistics': typeof StatisticsRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/my': typeof MyRoute
+  '/signup': typeof SignupRoute
   '/statistics': typeof StatisticsRoute
   '/station/$id': typeof StationIdRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/my': typeof MyRoute
+  '/signup': typeof SignupRoute
   '/statistics': typeof StatisticsRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/my' | '/statistics' | '/station/$id'
+  fullPaths: '/' | '/my' | '/signup' | '/statistics' | '/station/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/my' | '/statistics' | '/station/$id'
-  id: '__root__' | '/' | '/my' | '/statistics' | '/station/$id'
+  to: '/' | '/my' | '/signup' | '/statistics' | '/station/$id'
+  id: '__root__' | '/' | '/my' | '/signup' | '/statistics' | '/station/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MyRoute: typeof MyRoute
+  SignupRoute: typeof SignupRoute
   StatisticsRoute: typeof StatisticsRoute
   StationIdRoute: typeof StationIdRoute
 }
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/statistics'
       fullPath: '/statistics'
       preLoaderRoute: typeof StatisticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MyRoute: MyRoute,
+  SignupRoute: SignupRoute,
   StatisticsRoute: StatisticsRoute,
   StationIdRoute: StationIdRoute,
 }
