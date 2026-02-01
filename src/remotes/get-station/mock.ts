@@ -43,14 +43,11 @@ const createMockStationDetail = (id: number): Station => {
 		},
 	);
 
-	// chatRoomRecentMessages
-	const chatRoomRecentMessages: RecentPost[] = Array.from(
-		{ length: 3 },
-		(_, i) => ({
-			writer: `user_${i}`,
-			message: `message ${i}`,
-		}),
-	);
+	// recentPosts
+	const recentPosts: RecentPost[] = Array.from({ length: 3 }, (_, i) => ({
+		writer: `user_${i}`,
+		message: `message ${i}`,
+	}));
 
 	// nearbyAvailableStations
 	const nearbyAvailableStations: NearbyAvailableStation[] = Array.from(
@@ -77,7 +74,7 @@ const createMockStationDetail = (id: number): Station => {
 			observedBikeCountByHour,
 			predictedBikeCountByHour,
 		},
-		recentPosts: chatRoomRecentMessages,
+		recentPosts: recentPosts,
 		nearbyAvailableStations,
 	};
 };
