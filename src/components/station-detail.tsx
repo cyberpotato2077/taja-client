@@ -92,6 +92,7 @@ export function StationDetail({ station }: { station: Station }) {
 					<div className="flex gap-2 flex-wrap">
 						{station.operationMode.map((mode, index) => (
 							<div
+								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								key={index}
 								className="bg-gray-100 rounded-lg px-3 py-2 flex items-center gap-2"
 							>
@@ -122,6 +123,7 @@ export function StationDetail({ station }: { station: Station }) {
 					</div>
 					<div className="space-y-2 max-h-32 overflow-y-auto">
 						{station.recentPosts.slice(0, 3).map((message, index) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 							<div key={index} className="bg-gray-50 rounded-lg p-2">
 								<div className="flex items-start gap-2">
 									<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
@@ -134,11 +136,6 @@ export function StationDetail({ station }: { station: Station }) {
 										<div className="text-xs text-gray-600 truncate">
 											{message.message}
 										</div>
-										{message.isReply && message.replyToUserNickname && (
-											<div className="text-xs text-blue-600 mt-1">
-												↳ {message.replyToUserNickname}에게 답장
-											</div>
-										)}
 									</div>
 								</div>
 							</div>
@@ -165,6 +162,7 @@ export function StationDetail({ station }: { station: Station }) {
 								.slice(0, 3)
 								.map((nearby, index) => (
 									<div
+										// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 										key={index}
 										className="flex items-center justify-between bg-white rounded-md p-2 border border-gray-100"
 									>
