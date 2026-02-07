@@ -15,7 +15,7 @@ export function BottomNavigation() {
 				to="/ranking"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
-				<SearchIcon className="h-6 w-6" />
+				<TrophyIcon className="h-6 w-6" />
 				랭킹
 			</Link>
 			<Link
@@ -50,7 +50,7 @@ function HomeIcon(props: ComponentProps<"svg">) {
 	);
 }
 
-function SearchIcon(props: ComponentProps<"svg">) {
+function TrophyIcon(props: ComponentProps<"svg">) {
 	return (
 		<svg
 			{...props}
@@ -64,9 +64,12 @@ function SearchIcon(props: ComponentProps<"svg">) {
 			strokeLinecap="round"
 			strokeLinejoin="round"
 		>
-			<title>search</title>
-			<circle cx="11" cy="11" r="8" />
-			<path d="m21 21-4.3-4.3" />
+			<title>trophy</title>
+			<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+			<path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+			<path d="M4 22h16" />
+			<path d="M10 14.66V17a2 2 0 0 0 4 0v-2.34" />
+			<path d="M18 10c-1.5 1.5-2.83 3.09-3.55 4.66a4 4 0 0 1-4.9 0C8.83 13.09 7.5 11.5 6 10c-.5-1-1-2.5-1-4 0-2 2-3 3.5-3h7c1.5 0 3.5 1 3.5 3 0 1.5-.5 3-1 4Z" />
 		</svg>
 	);
 }
