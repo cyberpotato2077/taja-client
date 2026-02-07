@@ -22,6 +22,7 @@ import { joinBoardMock } from "@/remotes/join-board/mock";
 // Station Manage
 import { addFavoriteStationMock } from "@/remotes/add-favorite-station/mock";
 import { deleteFavoriteStationMock } from "@/remotes/delete-favorite-station/mock";
+import { getDailyRankedPostsMock } from "@/remotes/get-daily-ranked-posts/mock";
 import { healthCheckMock } from "@/remotes/health-check/mock";
 import { isFavoriteStationMock } from "@/remotes/is-favorite-station/mock";
 
@@ -53,4 +54,7 @@ export const handlers = [
 	deleteFavoriteStationMock,
 	isFavoriteStationMock,
 	healthCheckMock,
+
+	// Rank
+	getDailyRankedPostsMock,
 ];
