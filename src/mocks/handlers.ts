@@ -1,19 +1,10 @@
-import { getFavoriteStationsMock } from "@/remotes/get-favorite-stations/handler";
+import { getFavoriteStationsMock } from "@/remotes/get-favorite-stations/mock";
 import { getNearbyStationsMock } from "@/remotes/get-nearby-stations/mock";
 import { getStationMock } from "@/remotes/get-station/mock";
 import { getSearchStationsMock } from "@/remotes/search-stations/mock";
 
 // Station Status
 import { readStationStatusMock } from "@/remotes/station-status/mock";
-
-import { readDistrictPointFileMock } from "@/remotes/read-district-point-file/mock";
-// Weather
-import { readWeatherHistoriesMock } from "@/remotes/read-weather-histories/mock";
-
-import { calculateDayOfWeekStatisticsMock } from "@/remotes/calculate-day-of-week-statistics/mock";
-import { calculateHourlyStatisticsMock } from "@/remotes/calculate-hourly-statistics/mock";
-// Statistics
-import { calculateTemperatureStatisticsMock } from "@/remotes/calculate-temperature-statistics/mock";
 
 import { createPostMock } from "@/remotes/create-post/mock";
 import { deletePostMock } from "@/remotes/delete-post/mock";
@@ -33,7 +24,6 @@ import { addFavoriteStationMock } from "@/remotes/add-favorite-station/mock";
 import { deleteFavoriteStationMock } from "@/remotes/delete-favorite-station/mock";
 import { healthCheckMock } from "@/remotes/health-check/mock";
 import { isFavoriteStationMock } from "@/remotes/is-favorite-station/mock";
-import { readStationFileMock } from "@/remotes/read-station-file/mock";
 
 export const handlers = [
 	// Existing handlers
@@ -44,15 +34,6 @@ export const handlers = [
 
 	// Station Status
 	readStationStatusMock,
-
-	// Weather
-	readWeatherHistoriesMock,
-	readDistrictPointFileMock,
-
-	// Statistics
-	calculateTemperatureStatisticsMock,
-	calculateHourlyStatisticsMock,
-	calculateDayOfWeekStatisticsMock,
 
 	// Posts
 	getPostsMock,
@@ -71,6 +52,5 @@ export const handlers = [
 	addFavoriteStationMock,
 	deleteFavoriteStationMock,
 	isFavoriteStationMock,
-	readStationFileMock,
 	healthCheckMock,
 ];

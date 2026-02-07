@@ -16,7 +16,7 @@ function StationPage() {
 		data: station,
 		isPending,
 		isError,
-	} = useQuery(stationQueryOptions.detail({ id: Number(id) }));
+	} = useQuery(stationQueryOptions.detail({ stationId: Number(id) }));
 
 	if (isPending || isError) {
 		return null;

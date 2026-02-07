@@ -1,6 +1,7 @@
 import { useMainQueryStates } from "@/hooks/use-main-query-states";
 import { useOverlay } from "@/hooks/use-overlay";
 import { stationQueryOptions } from "@/queries/station-query-options";
+import type { MapStationResponse } from "@/remotes/get-nearby-stations";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
@@ -50,7 +51,7 @@ export function StationMarkers() {
 
 	return (
 		<>
-			{data?.map((station) => (
+			{data?.map((station: MapStationResponse) => (
 				<AdvancedMarker
 					key={`${station.latitude}-${station.longitude}`}
 					position={{

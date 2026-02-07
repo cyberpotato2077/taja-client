@@ -1,4 +1,9 @@
-import type { Station } from "@/remotes/get-station";
+import type {
+	NearbyAvailableStationDetailResponse,
+	OperationMode,
+	RecentPostResponse,
+	StationDetailResponse,
+} from "@/remotes/get-station";
 import {
 	Bike,
 	Clock,
@@ -8,7 +13,7 @@ import {
 	Users,
 } from "lucide-react";
 
-export function StationDetail({ station }: { station: Station }) {
+export function StationDetail({ station }: { station: StationDetailResponse }) {
 	const latestObserved =
 		station.todayAvailableBike?.observedBikeCountByHour?.slice(-1)[0]
 			?.bikeCount ?? 0;
@@ -90,7 +95,7 @@ export function StationDetail({ station }: { station: Station }) {
 						운영 모드
 					</h3>
 					<div className="flex gap-2 flex-wrap">
-						{station.operationMode.map((mode, index) => (
+						{station.operationMode.map((mode: OperationMode, index: number) => (
 							<div
 								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								key={index}
@@ -122,24 +127,26 @@ export function StationDetail({ station }: { station: Station }) {
 						</span>
 					</div>
 					<div className="space-y-2 max-h-32 overflow-y-auto">
-						{station.recentPosts.slice(0, 3).map((message, index) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-							<div key={index} className="bg-gray-50 rounded-lg p-2">
-								<div className="flex items-start gap-2">
-									<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
-										{message.writer?.[0]?.toUpperCase() || "U"}
-									</div>
-									<div className="flex-1 min-w-0">
-										<div className="text-xs font-medium text-gray-700">
-											{message.writer}
+						{station.recentPosts
+							.slice(0, 3)
+							.map((message: RecentPostResponse, index: number) => (
+								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+								<div key={index} className="bg-gray-50 rounded-lg p-2">
+									<div className="flex items-start gap-2">
+										<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+											{message.writer?.[0]?.toUpperCase() || "U"}
 										</div>
-										<div className="text-xs text-gray-600 truncate">
-											{message.message}
+										<div className="flex-1 min-w-0">
+											<div className="text-xs font-medium text-gray-700">
+												{message.writer}
+											</div>
+											<div className="text-xs text-gray-600 truncate">
+												{message.message}
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						))}
+							))}
 					</div>
 				</div>
 			)}
@@ -160,28 +167,33 @@ export function StationDetail({ station }: { station: Station }) {
 						<div className="space-y-1">
 							{station.nearbyAvailableStations
 								.slice(0, 3)
-								.map((nearby, index) => (
-									<div
-										// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-										key={index}
-										className="flex items-center justify-between bg-white rounded-md p-2 border border-gray-100"
-									>
-										<div className="flex-1 min-w-0">
-											<div className="text-sm font-medium text-gray-800 truncate">
-												{nearby.name}
+								.map(
+									(
+										nearby: NearbyAvailableStationDetailResponse,
+										index: number,
+									) => (
+										<div
+											// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+											key={index}
+											className="flex items-center justify-between bg-white rounded-md p-2 border border-gray-100"
+										>
+											<div className="flex-1 min-w-0">
+												<div className="text-sm font-medium text-gray-800 truncate">
+													{nearby.name}
+												</div>
+												<div className="text-xs text-gray-500">
+													#{nearby.stationId}
+												</div>
 											</div>
-											<div className="text-xs text-gray-500">
-												#{nearby.stationId}
+											<div className="text-right">
+												<div className="text-sm font-medium text-blue-600">
+													{nearby.distance}m
+												</div>
+												<div className="text-xs text-gray-500">거리</div>
 											</div>
 										</div>
-										<div className="text-right">
-											<div className="text-sm font-medium text-blue-600">
-												{nearby.distance}m
-											</div>
-											<div className="text-xs text-gray-500">거리</div>
-										</div>
-									</div>
-								))}
+									),
+								)}
 						</div>
 					</div>
 				)}
