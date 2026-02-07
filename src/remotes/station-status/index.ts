@@ -1,5 +1,11 @@
 import { http } from "@/utils/http";
 
-export function readStationStatus() {
-	return http.post<string>("/station-status/upload", {});
+export interface StationStatusResponse {
+	stationId: number;
+	availableBikeCount: number;
+	availableBikeCountTimestamp: string;
+}
+
+export function getStationStatus(stationNumber: number) {
+	return http.get<StationStatusResponse>(`/stations/status/${stationNumber}`);
 }

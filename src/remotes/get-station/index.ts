@@ -2,75 +2,73 @@ import { http } from "@/utils/http";
 
 export type GetStationRequest = {
 	/** 대여소 ID */
-	id: number;
+	stationId: number;
 };
 
 export interface OperationMode {
-	/** 운영 모드 타입 */
-	mode: "LCD" | "QR";
-	/** 랙 수 */
+	mode: string;
 	rackCount: number;
 }
 
-export interface BikeCountByHour {
-	/** 시간 (0-23) */
+export interface BikeCountByTimeResponse {
 	hour: number;
-	/** 해당 시간의 자전거 수 */
 	bikeCount: number;
 }
 
-export interface TodayAvailableBike {
-	/** 기준 시간戳 */
+export interface TodayAvailableBikeResponse {
 	timeStamp: string;
-	/** 실제 관측된 시간별 자전거 수 */
-	observedBikeCountByHour: BikeCountByHour[];
-	/** 예측된 시간별 자전거 수 */
-	predictedBikeCountByHour: BikeCountByHour[];
+	observedBikeCountByHour: BikeCountByTimeResponse[];
+	predictedBikeCountByHour: BikeCountByTimeResponse[];
 }
 
-export interface RecentPost {
-	/** 작성자 이름 */
+export interface RecentPostResponse {
 	writer: string;
-	/** 게시글 내용 */
 	message: string;
 }
 
-export interface NearbyAvailableStation {
-	/** 대여소 ID (타자 자체 아이디) */
+export interface NearbyAvailableStationDetailResponse {
 	stationId: number;
-	/** 대여소 number (서울시에서 정해준 아이디) */
-	number: number;
-	/** 대여소명 */
+	number: string;
 	name: string;
-	/** 대여소 위치 경도 */
-	longitude: number;
-	/** 대여소 위치 위도 */
 	latitude: number;
-	/** 현재 위치와의 거리 (10m) */
+	longitude: number;
 	distance: number;
 }
 
-export interface Station {
-	/** 대여소 ID */
+export interface HourlyAvailableItemResponse {
+	hour: number;
+	count: number;
+	baseDate: string;
+}
+
+export interface DailyAvailableItemResponse {
+	day: string;
+	count: number;
+	baseDate: string;
+}
+
+export interface TemperatureAvailableItemResponse {
+	temperature: number;
+	count: number;
+	baseDate: string;
+}
+
+export interface StationDetailResponse {
 	stationId: number;
-	/** 대여소명 */
+	number: string;
 	name: string;
-	/** 대여소 주소 */
 	address: string;
-	/** 대여소 위치 위도 */
 	latitude: number;
-	/** 대여소 위치 경도 */
 	longitude: number;
-	/** 운영 모드 목록 */
 	operationMode: OperationMode[];
-	/** 오늘의 자전거 수 예측 정보 */
-	todayAvailableBike: TodayAvailableBike;
-	/** 최근 게시글 목록 */
-	recentPosts: RecentPost[];
-	/** 근처 이용 가능한 대여소 목록 */
-	nearbyAvailableStations: NearbyAvailableStation[];
+	todayAvailableBike: TodayAvailableBikeResponse;
+	recentPosts: RecentPostResponse[];
+	nearbyAvailableStations: NearbyAvailableStationDetailResponse[];
+	hourlyAvailable: HourlyAvailableItemResponse[];
+	dailyAvailable: DailyAvailableItemResponse[];
+	temperatureAvailable: TemperatureAvailableItemResponse[];
 }
 
 export function getStation(params: GetStationRequest) {
-	return http.get<Station>(`/stations/${params.id}`);
+	return http.get<StationDetailResponse>(`/stations/${params.stationId}`);
 }
