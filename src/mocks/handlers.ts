@@ -3,6 +3,18 @@ import { getNearbyStationsMock } from "@/remotes/get-nearby-stations/mock";
 import { getStationMock } from "@/remotes/get-station/mock";
 import { getSearchStationsMock } from "@/remotes/search-stations/mock";
 
+// Authentication
+import {
+	checkNameDuplicateMock,
+	loginMock,
+	logoutMock,
+	reissueTokenMock,
+	sendEmailMock,
+	signupMock,
+	verifyEmailMock,
+} from "@/remotes/auth/mock";
+import { getJoinedBoardsMock } from "@/remotes/get-joined-boards/mock";
+
 // Station Status
 import { readStationStatusMock } from "@/remotes/station-status/mock";
 
@@ -27,6 +39,18 @@ import { healthCheckMock } from "@/remotes/health-check/mock";
 import { isFavoriteStationMock } from "@/remotes/is-favorite-station/mock";
 
 export const handlers = [
+	// Authentication
+	loginMock,
+	signupMock,
+	logoutMock,
+	reissueTokenMock,
+	checkNameDuplicateMock,
+	sendEmailMock,
+	verifyEmailMock,
+
+	// Member
+	getJoinedBoardsMock,
+
 	// Existing handlers
 	getNearbyStationsMock,
 	getStationMock,
