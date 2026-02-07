@@ -22,7 +22,7 @@ export function StationDrawer({
 		data: station,
 		isPending,
 		isError,
-	} = useQuery(stationQueryOptions.detail({ id: stationId }));
+	} = useQuery(stationQueryOptions.detail({ stationId }));
 
 	return (
 		<Drawer

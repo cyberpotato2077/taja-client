@@ -1,12 +1,12 @@
 import { MAP_RESTRICTION } from "@/constants/maps";
-import type { Station } from "@/remotes/search-stations";
+import type { StationSimpleResponse } from "@/remotes/search-stations";
 import { http, HttpResponse } from "msw";
 
 const getRandomNumber = (min: number, max: number) => {
 	return Math.random() * (max - min) + min;
 };
 
-const createRandomStations = (size: number): Station[] => {
+const createRandomStations = (size: number): StationSimpleResponse[] => {
 	return Array.from({ length: size }, (_, i) => ({
 		stationId: i + 1,
 		number: i + 1,
@@ -21,6 +21,8 @@ const createRandomStations = (size: number): Station[] => {
 export const getSearchStationsMock = http.get(
 	"/api/stations/map/search",
 	() => {
-		return HttpResponse.json<Station[]>(createRandomStations(100));
+		return HttpResponse.json<StationSimpleResponse[]>(
+			createRandomStations(100),
+		);
 	},
 );

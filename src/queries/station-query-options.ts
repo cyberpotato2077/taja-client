@@ -1,39 +1,39 @@
-import { getFavoriteStations } from "@/remotes/get-favorite-stations";
+import { findFavoriteStations } from "@/remotes/get-favorite-stations";
 import {
-	type GetNearbyStationsRequest,
-	getNearbyStations,
+	type NearbyStationRequest,
+	findNearbyStations,
 } from "@/remotes/get-nearby-stations";
 import { type GetStationRequest, getStation } from "@/remotes/get-station";
 import {
-	type SearchStationsRequest,
-	searchStations,
+	type SearchStationRequest,
+	searchStation,
 } from "@/remotes/search-stations";
 import { queryOptions } from "@tanstack/react-query";
 
 export const stationQueryOptions = {
 	station: ["station"],
-	markers: (params: GetNearbyStationsRequest) => {
+	markers: (params: NearbyStationRequest) => {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "markers", params],
-			queryFn: () => getNearbyStations(params),
+			queryFn: () => findNearbyStations(params),
 		});
 	},
 	detail: (params: GetStationRequest) => {
 		return queryOptions({
-			queryKey: [...stationQueryOptions.station, "detail", params.id],
+			queryKey: [...stationQueryOptions.station, "detail", params.stationId],
 			queryFn: () => getStation(params),
 		});
 	},
-	search: (params: SearchStationsRequest) => {
+	search: (params: SearchStationRequest) => {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "search", params],
-			queryFn: () => searchStations(params),
+			queryFn: () => searchStation(params),
 		});
 	},
 	favorites: () => {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "favorites"],
-			queryFn: () => getFavoriteStations(),
+			queryFn: () => findFavoriteStations(),
 		});
 	},
 };

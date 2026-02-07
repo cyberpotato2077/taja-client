@@ -1,12 +1,12 @@
 import { MAP_RESTRICTION } from "@/constants/maps";
 import { http, HttpResponse } from "msw";
-import type { Marker } from ".";
+import type { MapStationResponse } from ".";
 
 const getRandomNumber = (min: number, max: number) => {
 	return Math.random() * (max - min) + min;
 };
 
-const createRandomStation = (index: number): Marker => ({
+const createRandomStation = (index: number): MapStationResponse => ({
 	stationId: index,
 	number: index,
 	bikeCount: Math.floor(Math.random() * 20),
@@ -15,7 +15,7 @@ const createRandomStation = (index: number): Marker => ({
 	requestedAt: new Date().toISOString(),
 });
 
-const createMockStations = (size: number): Marker[] => {
+const createMockStations = (size: number): MapStationResponse[] => {
 	return Array.from({ length: size }, (_, i) => createRandomStation(i + 1));
 };
 
@@ -33,6 +33,6 @@ export const getNearbyStationsMock = http.get(
 			size,
 		});
 
-		return HttpResponse.json<Marker[]>(createMockStations(size));
+		return HttpResponse.json<MapStationResponse[]>(createMockStations(size));
 	},
 );

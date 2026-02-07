@@ -9,6 +9,7 @@ import {
 import { LOCATIONS } from "@/constants/locations";
 import { useMainQueryStates } from "@/hooks/use-main-query-states";
 import { stationQueryOptions } from "@/queries/station-query-options";
+import type { StationSimpleResponse } from "@/remotes/search-stations";
 import { useQuery } from "@tanstack/react-query";
 import { useMap } from "@vis.gl/react-google-maps";
 import { disassemble } from "es-hangul";
@@ -71,7 +72,7 @@ export function SearchBar() {
 		if (!query.trim()) return [];
 
 		const stations: SearchResult[] = (searchedStations ?? []).map(
-			(station) => ({
+			(station: StationSimpleResponse) => ({
 				id: String(station.stationId),
 				name: station.name,
 				address: station.address,

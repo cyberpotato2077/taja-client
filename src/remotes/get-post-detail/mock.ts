@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
-import type { CommentItem, PostDetail } from "./index";
+import type { CommentItemResponse, PostDetailResponse } from "./index";
 
-const mockComments: CommentItem[] = [
+const mockComments: CommentItemResponse[] = [
 	{
 		commentId: 1,
 		writer: "박라이더",
@@ -16,7 +16,7 @@ const mockComments: CommentItem[] = [
 	},
 ];
 
-const mockPostDetail: PostDetail = {
+const mockPostDetail: PostDetailResponse = {
 	postId: 1,
 	writer: "김태자",
 	createdAt: "2024-01-15T10:30:00Z",
@@ -34,7 +34,7 @@ export const getPostDetailMock = http.get(
 		const postId = Number(params.postId);
 
 		if (postId === 1) {
-			return HttpResponse.json<PostDetail>(mockPostDetail);
+			return HttpResponse.json<PostDetailResponse>(mockPostDetail);
 		}
 
 		return HttpResponse.json({ error: "Post not found" }, { status: 404 });
