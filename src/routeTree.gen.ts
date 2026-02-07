@@ -9,21 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as StatisticsRouteImport } from './routes/statistics'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as MyRouteImport } from './routes/my'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StationIdRouteImport } from './routes/station/$id'
 
-const StatisticsRoute = StatisticsRouteImport.update({
-  id: '/statistics',
-  path: '/statistics',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RankingRoute = RankingRouteImport.update({
+  id: '/ranking',
+  path: '/ranking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyRoute = MyRouteImport.update({
@@ -51,16 +51,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/my': typeof MyRoute
+  '/ranking': typeof RankingRoute
   '/signup': typeof SignupRoute
-  '/statistics': typeof StatisticsRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/my': typeof MyRoute
+  '/ranking': typeof RankingRoute
   '/signup': typeof SignupRoute
-  '/statistics': typeof StatisticsRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRoutesById {
@@ -68,22 +68,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/my': typeof MyRoute
+  '/ranking': typeof RankingRoute
   '/signup': typeof SignupRoute
-  '/statistics': typeof StatisticsRoute
   '/station/$id': typeof StationIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/my' | '/signup' | '/statistics' | '/station/$id'
+  fullPaths: '/' | '/login' | '/my' | '/ranking' | '/signup' | '/station/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/my' | '/signup' | '/statistics' | '/station/$id'
+  to: '/' | '/login' | '/my' | '/ranking' | '/signup' | '/station/$id'
   id:
     | '__root__'
     | '/'
     | '/login'
     | '/my'
+    | '/ranking'
     | '/signup'
-    | '/statistics'
     | '/station/$id'
   fileRoutesById: FileRoutesById
 }
@@ -91,25 +91,25 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   MyRoute: typeof MyRoute
+  RankingRoute: typeof RankingRoute
   SignupRoute: typeof SignupRoute
-  StatisticsRoute: typeof StatisticsRoute
   StationIdRoute: typeof StationIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/statistics': {
-      id: '/statistics'
-      path: '/statistics'
-      fullPath: '/statistics'
-      preLoaderRoute: typeof StatisticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/signup': {
       id: '/signup'
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ranking': {
+      id: '/ranking'
+      path: '/ranking'
+      fullPath: '/ranking'
+      preLoaderRoute: typeof RankingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my': {
@@ -147,8 +147,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   MyRoute: MyRoute,
+  RankingRoute: RankingRoute,
   SignupRoute: SignupRoute,
-  StatisticsRoute: StatisticsRoute,
   StationIdRoute: StationIdRoute,
 }
 export const routeTree = rootRouteImport

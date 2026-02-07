@@ -12,11 +12,11 @@ export function BottomNavigation() {
 				지도
 			</Link>
 			<Link
-				to="/statistics"
+				to="/ranking"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
 				<SearchIcon className="h-6 w-6" />
-				통계
+				랭킹
 			</Link>
 			<Link
 				to="/my"
