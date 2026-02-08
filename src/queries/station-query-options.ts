@@ -3,6 +3,7 @@ import {
 	type NearbyStationRequest,
 	findNearbyStations,
 } from "@/remotes/get-nearby-stations";
+import { type GetPostsRequest, getPosts } from "@/remotes/get-posts";
 import { type GetStationRequest, getStation } from "@/remotes/get-station";
 import {
 	type SearchStationRequest,
@@ -34,6 +35,12 @@ export const stationQueryOptions = {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "favorites"],
 			queryFn: () => findFavoriteStations(),
+		});
+	},
+	posts: (params: GetPostsRequest) => {
+		return queryOptions({
+			queryKey: [...stationQueryOptions.station, "posts", params],
+			queryFn: () => getPosts(params),
 		});
 	},
 };

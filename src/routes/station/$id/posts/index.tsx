@@ -7,7 +7,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 export const Route = createFileRoute("/station/$id/posts/")({
 	component: RouteComponent,
 	loader: ({ params }) => ({
-		stationQueryOptions: stationQueryOptions.detail({
+		postsQueryOptions: stationQueryOptions.posts({
 			stationId: Number(params.id),
 		}),
 	}),
@@ -15,8 +15,8 @@ export const Route = createFileRoute("/station/$id/posts/")({
 
 function RouteComponent() {
 	const router = useRouter();
-	const { stationQueryOptions: queryOptions } = Route.useLoaderData();
-	const { data: station } = useSuspenseQuery(queryOptions);
+	const { postsQueryOptions: queryOptions } = Route.useLoaderData();
+	const { data: postsData } = useSuspenseQuery(queryOptions);
 
 	return (
 		<LayoutWithTop
@@ -25,7 +25,7 @@ function RouteComponent() {
 		>
 			<div className="p-4">
 				<h2 className="text-lg font-semibold mb-4">최근 메시지</h2>
-				<PostList posts={station.recentPosts} />
+				<PostList posts={postsData.posts} />
 			</div>
 		</LayoutWithTop>
 	);
