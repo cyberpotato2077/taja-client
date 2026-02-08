@@ -46,13 +46,15 @@ export function StationDrawer({
 					}
 				}}
 			>
-				<div className="mx-auto w-full">
+				<div className="mx-auto w-full flex flex-col max-h-[70vh]">
 					{isError ? (
 						<></>
 					) : isPending ? (
 						<></>
 					) : (
-						<StationDetail station={station} />
+						<div className="overflow-y-auto flex-1">
+							<StationDetail station={station} />
+						</div>
 					)}
 
 					<DrawerFooter>
