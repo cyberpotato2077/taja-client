@@ -1,10 +1,13 @@
 import type { PostItem } from "@/remotes/get-posts";
+import { useNavigate } from "@tanstack/react-router";
 
 interface PostListProps {
 	posts: PostItem[];
 }
 
 export function PostList({ posts }: PostListProps) {
+	const navigate = useNavigate();
+
 	if (posts.length === 0) {
 		return (
 			<p className="text-gray-500 text-center py-8">아직 메시지가 없습니다.</p>
@@ -14,7 +17,20 @@ export function PostList({ posts }: PostListProps) {
 	return (
 		<div className="space-y-3">
 			{posts.map((post) => (
-				<div key={post.postId} className="bg-gray-50 rounded-lg p-3">
+				<button
+					key={post.postId}
+					type="button"
+					className="w-full bg-gray-50 rounded-lg p-3 cursor-pointer hover:bg-gray-100 transition-colors text-left"
+					onClick={() =>
+						navigate({
+							to: "/station/$id/posts/$postId",
+							params: {
+								id: post.stationId.toString(),
+								postId: post.postId.toString(),
+							},
+						})
+					}
+				>
 					<div className="flex items-start gap-3">
 						<div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
 							<span className="text-xs text-blue-600 font-medium">
@@ -33,7 +49,7 @@ export function PostList({ posts }: PostListProps) {
 							</div>
 						</div>
 					</div>
-				</div>
+				</button>
 			))}
 		</div>
 	);

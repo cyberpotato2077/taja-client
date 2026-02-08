@@ -3,6 +3,7 @@ import {
 	type NearbyStationRequest,
 	findNearbyStations,
 } from "@/remotes/get-nearby-stations";
+import { getPostDetail } from "@/remotes/get-post-detail";
 import { type GetPostsRequest, getPosts } from "@/remotes/get-posts";
 import { type GetStationRequest, getStation } from "@/remotes/get-station";
 import {
@@ -41,6 +42,12 @@ export const stationQueryOptions = {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "posts", params],
 			queryFn: () => getPosts(params),
+		});
+	},
+	postDetail: (postId: number) => {
+		return queryOptions({
+			queryKey: [...stationQueryOptions.station, "postDetail", postId],
+			queryFn: () => getPostDetail(postId),
 		});
 	},
 };

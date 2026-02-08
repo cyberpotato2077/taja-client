@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StationIdIndexRouteImport } from './routes/station/$id/index'
 import { Route as StationIdPostsIndexRouteImport } from './routes/station/$id/posts/index'
+import { Route as StationIdPostsPostIdIndexRouteImport } from './routes/station/$id/posts/$postId/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -52,6 +53,12 @@ const StationIdPostsIndexRoute = StationIdPostsIndexRouteImport.update({
   path: '/station/$id/posts/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StationIdPostsPostIdIndexRoute =
+  StationIdPostsPostIdIndexRouteImport.update({
+    id: '/station/$id/posts/$postId/',
+    path: '/station/$id/posts/$postId/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/station/$id': typeof StationIdIndexRoute
   '/station/$id/posts': typeof StationIdPostsIndexRoute
+  '/station/$id/posts/$postId': typeof StationIdPostsPostIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +78,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/station/$id': typeof StationIdIndexRoute
   '/station/$id/posts': typeof StationIdPostsIndexRoute
+  '/station/$id/posts/$postId': typeof StationIdPostsPostIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +89,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/station/$id/': typeof StationIdIndexRoute
   '/station/$id/posts/': typeof StationIdPostsIndexRoute
+  '/station/$id/posts/$postId/': typeof StationIdPostsPostIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/station/$id'
     | '/station/$id/posts'
+    | '/station/$id/posts/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +111,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/station/$id'
     | '/station/$id/posts'
+    | '/station/$id/posts/$postId'
   id:
     | '__root__'
     | '/'
@@ -109,6 +121,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/station/$id/'
     | '/station/$id/posts/'
+    | '/station/$id/posts/$postId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +132,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   StationIdIndexRoute: typeof StationIdIndexRoute
   StationIdPostsIndexRoute: typeof StationIdPostsIndexRoute
+  StationIdPostsPostIdIndexRoute: typeof StationIdPostsPostIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StationIdPostsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/station/$id/posts/$postId/': {
+      id: '/station/$id/posts/$postId/'
+      path: '/station/$id/posts/$postId'
+      fullPath: '/station/$id/posts/$postId'
+      preLoaderRoute: typeof StationIdPostsPostIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +204,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   StationIdIndexRoute: StationIdIndexRoute,
   StationIdPostsIndexRoute: StationIdPostsIndexRoute,
+  StationIdPostsPostIdIndexRoute: StationIdPostsPostIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
