@@ -126,7 +126,7 @@ export function StationDetail({ station }: { station: StationDetailResponse }) {
 							({station.recentPosts.length})
 						</span>
 					</div>
-					<div className="space-y-2 max-h-32 overflow-y-auto">
+					<div className="space-y-2">
 						{station.recentPosts
 							.slice(0, 3)
 							.map((message: RecentPostResponse, index: number) => (
