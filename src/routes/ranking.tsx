@@ -2,7 +2,7 @@ import { LayoutWithTop } from "@/components/layout-with-top";
 import { rankingQueryOptions } from "@/queries/ranking-query-options";
 import type { Item } from "@/remotes/get-daily-ranked-posts";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Heart, MapPin, MessageCircle, Trophy } from "lucide-react";
 
 export const Route = createFileRoute("/ranking")({
@@ -37,6 +37,14 @@ interface RankingCardProps {
 }
 
 function RankingCard({ post }: RankingCardProps) {
+	const navigate = useNavigate();
+
+	const handleClick = () => {
+		navigate({
+			to: "/station/$id/posts",
+			params: { id: post.stationId.toString() },
+		});
+	};
 	const getRankColor = (rank: number) => {
 		switch (rank) {
 			case 1:
@@ -64,7 +72,11 @@ function RankingCard({ post }: RankingCardProps) {
 	};
 
 	return (
-		<div className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
+		<button
+			type="button"
+			className="w-full bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow text-left"
+			onClick={handleClick}
+		>
 			<div className="flex items-start gap-3">
 				<div
 					className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border ${getRankColor(post.rank)}`}
@@ -102,6 +114,6 @@ function RankingCard({ post }: RankingCardProps) {
 					</div>
 				</div>
 			</div>
-		</div>
+		</button>
 	);
 }

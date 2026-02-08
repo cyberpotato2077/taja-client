@@ -1,19 +1,71 @@
+import { addFavoriteStation } from "@/remotes/add-favorite-station";
+import { deleteFavoriteStation } from "@/remotes/delete-favorite-station";
 import type {
 	NearbyAvailableStationDetailResponse,
 	OperationMode,
 	RecentPostResponse,
 	StationDetailResponse,
 } from "@/remotes/get-station";
+import { isFavoriteStation } from "@/remotes/is-favorite-station";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { useNavigate } from "@tanstack/react-router";
 import {
 	Bike,
 	Clock,
 	MapPin,
 	MessageCircle,
+	Star,
 	TrendingUp,
 	Users,
 } from "lucide-react";
 
-export function StationDetail({ station }: { station: StationDetailResponse }) {
+export function StationDetail({
+	station,
+	navigate,
+}: {
+	station: StationDetailResponse;
+	navigate: ReturnType<typeof useNavigate>;
+}) {
+	const queryClient = useQueryClient();
+
+	const { data: favoriteData } = useQuery({
+		queryKey: ["favorite", station.stationId],
+		queryFn: () => isFavoriteStation(station.stationId),
+	});
+
+	const addFavoriteMutation = useMutation({
+		mutationFn: () => addFavoriteStation(station.stationId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["favorite", station.stationId],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["station", "favorites"],
+			});
+		},
+	});
+
+	const deleteFavoriteMutation = useMutation({
+		mutationFn: () => deleteFavoriteStation(station.stationId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["favorite", station.stationId],
+			});
+			queryClient.invalidateQueries({
+				queryKey: ["station", "favorites"],
+			});
+		},
+	});
+
+	const isFavorite = favoriteData?.isFavorite ?? false;
+
+	const handleToggleFavorite = () => {
+		if (isFavorite) {
+			deleteFavoriteMutation.mutate();
+		} else {
+			addFavoriteMutation.mutate();
+		}
+	};
 	const latestObserved =
 		station.todayAvailableBike?.observedBikeCountByHour?.slice(-1)[0]
 			?.bikeCount ?? 0;
@@ -33,7 +85,25 @@ export function StationDetail({ station }: { station: StationDetailResponse }) {
 		<div className="p-4 pb-0 space-y-4">
 			{/* Header */}
 			<div className="border-b pb-3">
-				<h2 className="text-lg font-bold text-gray-900 mb-1">{station.name}</h2>
+				<div className="flex items-center justify-between">
+					<h2 className="text-lg font-bold text-gray-900 mb-1">
+						{station.name}
+					</h2>
+					<button
+						type="button"
+						onClick={handleToggleFavorite}
+						className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+						disabled={
+							addFavoriteMutation.isPending || deleteFavoriteMutation.isPending
+						}
+					>
+						<Star
+							className={`w-5 h-5 ${
+								isFavorite ? "fill-yellow-400 text-yellow-400" : "text-gray-400"
+							} transition-colors`}
+						/>
+					</button>
+				</div>
 				<div className="flex items-center gap-2 text-sm text-gray-600">
 					<MapPin className="w-4 h-4" />
 					<span>{station.address}</span>
@@ -119,14 +189,34 @@ export function StationDetail({ station }: { station: StationDetailResponse }) {
 			{/* Recent Messages */}
 			{station.recentPosts && station.recentPosts.length > 0 && (
 				<div>
-					<div className="flex items-center gap-2 mb-2">
-						<MessageCircle className="w-4 h-4 text-gray-600" />
-						<h3 className="text-sm font-semibold text-gray-700">최근 메시지</h3>
-						<span className="text-xs text-gray-500">
-							({station.recentPosts.length})
-						</span>
+					<div className="flex items-center justify-between mb-2">
+						<div className="flex items-center gap-2 mb-2">
+							<MessageCircle className="w-4 h-4 text-gray-600" />
+							<h3 className="text-sm font-semibold text-gray-700">
+								최근 메시지
+							</h3>
+							<span className="text-xs text-gray-500">
+								({station.recentPosts.length})
+							</span>
+						</div>
+						<div>
+							<button
+								type="button"
+								className="text-xs text-blue-600"
+								onClick={() =>
+									navigate({
+										to: "/station/$id/posts",
+										params: {
+											id: String(station.stationId),
+										},
+									})
+								}
+							>
+								더보기
+							</button>
+						</div>
 					</div>
-					<div className="space-y-2 max-h-32 overflow-y-auto">
+					<div className="space-y-2">
 						{station.recentPosts
 							.slice(0, 3)
 							.map((message: RecentPostResponse, index: number) => (

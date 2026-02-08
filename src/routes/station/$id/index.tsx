@@ -2,15 +2,21 @@ import { LayoutWithTop } from "@/components/layout-with-top";
 import { StationDetail } from "@/components/station-detail";
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams, useRouter } from "@tanstack/react-router";
+import {
+	createFileRoute,
+	useNavigate,
+	useParams,
+	useRouter,
+} from "@tanstack/react-router";
 
-export const Route = createFileRoute("/station/$id")({
+export const Route = createFileRoute("/station/$id/")({
 	component: StationPage,
 });
 
 function StationPage() {
 	const { id } = useParams({ from: Route.id });
 	const router = useRouter();
+	const navigate = useNavigate();
 
 	const {
 		data: station,
@@ -29,7 +35,7 @@ function StationPage() {
 				router.history.back();
 			}}
 		>
-			<StationDetail station={station} />
+			<StationDetail station={station} navigate={navigate} />
 		</LayoutWithTop>
 	);
 }
