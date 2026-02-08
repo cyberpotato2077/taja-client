@@ -53,6 +53,13 @@ declare module "@tanstack/react-router" {
 	}
 }
 
+// Handle GitHub Pages SPA redirect
+if (sessionStorage.redirect) {
+	const redirect = sessionStorage.redirect;
+	sessionStorage.removeItem("redirect");
+	history.replaceState(null, "", redirect);
+}
+
 // Render the app
 const rootElement = document.getElementById("app");
 if (rootElement && !rootElement.innerHTML) {
