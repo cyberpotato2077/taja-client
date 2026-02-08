@@ -8,6 +8,7 @@ import type {
 } from "@/remotes/get-station";
 import { isFavoriteStation } from "@/remotes/is-favorite-station";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import type { useNavigate } from "@tanstack/react-router";
 import {
 	Bike,
 	Clock,
@@ -18,7 +19,13 @@ import {
 	Users,
 } from "lucide-react";
 
-export function StationDetail({ station }: { station: StationDetailResponse }) {
+export function StationDetail({
+	station,
+	navigate,
+}: {
+	station: StationDetailResponse;
+	navigate: ReturnType<typeof useNavigate>;
+}) {
 	const queryClient = useQueryClient();
 
 	const { data: favoriteData } = useQuery({
@@ -182,12 +189,32 @@ export function StationDetail({ station }: { station: StationDetailResponse }) {
 			{/* Recent Messages */}
 			{station.recentPosts && station.recentPosts.length > 0 && (
 				<div>
-					<div className="flex items-center gap-2 mb-2">
-						<MessageCircle className="w-4 h-4 text-gray-600" />
-						<h3 className="text-sm font-semibold text-gray-700">최근 메시지</h3>
-						<span className="text-xs text-gray-500">
-							({station.recentPosts.length})
-						</span>
+					<div className="flex items-center justify-between mb-2">
+						<div className="flex items-center gap-2 mb-2">
+							<MessageCircle className="w-4 h-4 text-gray-600" />
+							<h3 className="text-sm font-semibold text-gray-700">
+								최근 메시지
+							</h3>
+							<span className="text-xs text-gray-500">
+								({station.recentPosts.length})
+							</span>
+						</div>
+						<div>
+							<button
+								type="button"
+								className="text-xs text-blue-600"
+								onClick={() =>
+									navigate({
+										to: "/station/$id/posts",
+										params: {
+											id: String(station.stationId),
+										},
+									})
+								}
+							>
+								더보기
+							</button>
+						</div>
 					</div>
 					<div className="space-y-2">
 						{station.recentPosts

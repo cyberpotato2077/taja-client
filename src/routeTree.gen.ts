@@ -14,7 +14,8 @@ import { Route as RankingRouteImport } from './routes/ranking'
 import { Route as MyRouteImport } from './routes/my'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StationIdRouteImport } from './routes/station/$id'
+import { Route as StationIdIndexRouteImport } from './routes/station/$id/index'
+import { Route as StationIdPostsIndexRouteImport } from './routes/station/$id/posts/index'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -41,9 +42,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StationIdRoute = StationIdRouteImport.update({
-  id: '/station/$id',
-  path: '/station/$id',
+const StationIdIndexRoute = StationIdIndexRouteImport.update({
+  id: '/station/$id/',
+  path: '/station/$id/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StationIdPostsIndexRoute = StationIdPostsIndexRouteImport.update({
+  id: '/station/$id/posts/',
+  path: '/station/$id/posts/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -53,7 +59,8 @@ export interface FileRoutesByFullPath {
   '/my': typeof MyRoute
   '/ranking': typeof RankingRoute
   '/signup': typeof SignupRoute
-  '/station/$id': typeof StationIdRoute
+  '/station/$id': typeof StationIdIndexRoute
+  '/station/$id/posts': typeof StationIdPostsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,7 +68,8 @@ export interface FileRoutesByTo {
   '/my': typeof MyRoute
   '/ranking': typeof RankingRoute
   '/signup': typeof SignupRoute
-  '/station/$id': typeof StationIdRoute
+  '/station/$id': typeof StationIdIndexRoute
+  '/station/$id/posts': typeof StationIdPostsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/my': typeof MyRoute
   '/ranking': typeof RankingRoute
   '/signup': typeof SignupRoute
-  '/station/$id': typeof StationIdRoute
+  '/station/$id/': typeof StationIdIndexRoute
+  '/station/$id/posts/': typeof StationIdPostsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/my' | '/ranking' | '/signup' | '/station/$id'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/my'
+    | '/ranking'
+    | '/signup'
+    | '/station/$id'
+    | '/station/$id/posts'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/my' | '/ranking' | '/signup' | '/station/$id'
+  to:
+    | '/'
+    | '/login'
+    | '/my'
+    | '/ranking'
+    | '/signup'
+    | '/station/$id'
+    | '/station/$id/posts'
   id:
     | '__root__'
     | '/'
@@ -84,7 +107,8 @@ export interface FileRouteTypes {
     | '/my'
     | '/ranking'
     | '/signup'
-    | '/station/$id'
+    | '/station/$id/'
+    | '/station/$id/posts/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,7 +117,8 @@ export interface RootRouteChildren {
   MyRoute: typeof MyRoute
   RankingRoute: typeof RankingRoute
   SignupRoute: typeof SignupRoute
-  StationIdRoute: typeof StationIdRoute
+  StationIdIndexRoute: typeof StationIdIndexRoute
+  StationIdPostsIndexRoute: typeof StationIdPostsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,11 +158,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/station/$id': {
-      id: '/station/$id'
+    '/station/$id/': {
+      id: '/station/$id/'
       path: '/station/$id'
       fullPath: '/station/$id'
-      preLoaderRoute: typeof StationIdRouteImport
+      preLoaderRoute: typeof StationIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/station/$id/posts/': {
+      id: '/station/$id/posts/'
+      path: '/station/$id/posts'
+      fullPath: '/station/$id/posts'
+      preLoaderRoute: typeof StationIdPostsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -149,7 +181,8 @@ const rootRouteChildren: RootRouteChildren = {
   MyRoute: MyRoute,
   RankingRoute: RankingRoute,
   SignupRoute: SignupRoute,
-  StationIdRoute: StationIdRoute,
+  StationIdIndexRoute: StationIdIndexRoute,
+  StationIdPostsIndexRoute: StationIdPostsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

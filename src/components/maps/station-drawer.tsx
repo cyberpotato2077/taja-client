@@ -53,7 +53,7 @@ export function StationDrawer({
 						<></>
 					) : (
 						<div className="overflow-y-auto flex-1">
-							<StationDetail station={station} />
+							<StationDetail station={station} navigate={navigate} />
 						</div>
 					)}
 
