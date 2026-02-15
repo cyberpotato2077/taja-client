@@ -44,6 +44,7 @@ jobs:
       - name: Build
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+          VITE_API_BASE_URL: http://taja.myvnc.com:8888
         run: pnpm build
       - name: Setup Pages
         uses: actions/configure-pages@v5

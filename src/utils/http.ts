@@ -47,7 +47,9 @@ export function getAccessToken() {
 }
 
 const axiosInstance: CustomAxiosInstance = axios.create({
-	baseURL: "/api",
+	baseURL: import.meta.env.PROD
+		? import.meta.env.VITE_API_BASE_URL
+		: "/api",
 	withCredentials: true,
 });
 
