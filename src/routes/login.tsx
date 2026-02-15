@@ -2,6 +2,9 @@ import { LayoutWithTop } from "@/components/layout-with-top";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { login } from "@/remotes/auth";
+import { setAccessToken } from "@/utils/http";
+import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 
@@ -16,12 +19,17 @@ function RouteComponent() {
 		password: "",
 	});
 
+	const loginMutation = useMutation({
+		mutationFn: login,
+		onSuccess: (data) => {
+			setAccessToken(data.accessToken);
+			router.navigate({ to: "/my" });
+		},
+	});
+
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		// TODO: Implement login logic
-		console.log("Login data:", formData);
-		// Redirect to my page after successful login
-		router.navigate({ to: "/my" });
+		loginMutation.mutate(formData);
 	};
 
 	const handleInputChange =
@@ -60,8 +68,18 @@ function RouteComponent() {
 						/>
 					</div>
 
-					<Button type="submit" className="w-full">
-						로그인
+					{loginMutation.isError && (
+						<p className="text-sm text-red-500">
+							이메일 또는 비밀번호가 올바르지 않습니다.
+						</p>
+					)}
+
+					<Button
+						type="submit"
+						className="w-full"
+						disabled={loginMutation.isPending}
+					>
+						{loginMutation.isPending ? "로그인 중..." : "로그인"}
 					</Button>
 				</form>
 
