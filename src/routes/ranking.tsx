@@ -1,7 +1,8 @@
 import { LayoutWithTop } from "@/components/layout-with-top";
 import { rankingQueryOptions } from "@/queries/ranking-query-options";
 import type { Item } from "@/remotes/get-daily-ranked-posts";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense } from "@suspensive/react";
+import { SuspenseQuery } from "@suspensive/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Heart, MapPin, MessageCircle, Trophy } from "lucide-react";
 
@@ -10,10 +11,6 @@ export const Route = createFileRoute("/ranking")({
 });
 
 function RouteComponent() {
-	const { data: dailyRankedPosts } = useSuspenseQuery(
-		rankingQueryOptions.daily(),
-	);
-
 	return (
 		<LayoutWithTop showBackButton>
 			<div className="container mx-auto px-4 py-6 max-w-2xl">
@@ -23,9 +20,15 @@ function RouteComponent() {
 				</div>
 
 				<div className="space-y-4">
-					{dailyRankedPosts.posts.map((post: Item) => (
-						<RankingCard key={post.postId} post={post} />
-					))}
+					<Suspense fallback={<div>Loading...</div>}>
+						<SuspenseQuery {...rankingQueryOptions.daily()}>
+							{({ data: dailyRankedPosts }) =>
+								dailyRankedPosts.posts.map((post: Item) => (
+									<RankingCard key={post.postId} post={post} />
+								))
+							}
+						</SuspenseQuery>
+					</Suspense>
 				</div>
 			</div>
 		</LayoutWithTop>
