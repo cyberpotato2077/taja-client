@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>타자</title>
+  <script>
+    // GitHub Pages SPA redirect handler
+    // Saves the current path to sessionStorage and redirects to index.html
+    (function() {
+      var basePath = '/taja-client/';
+      var redirect = window.location.pathname;
+
+      // Remove the base path if present
+      if (redirect.startsWith(basePath)) {
+        redirect = redirect.substring(basePath.length - 1);
+      }
+
+      // Store the original path (including search and hash)
+      sessionStorage.redirect = redirect + window.location.search + window.location.hash;
+
+      // Redirect to the base URL
+      window.location.replace(basePath);
+    })();
+  </script>
+</head>
+<body>
+  <!-- This page is used to redirect to the proper route -->
+</body>
+</html>
