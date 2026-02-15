@@ -15,15 +15,90 @@ interface CustomAxiosInstance extends AxiosInstance {
 	patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
 }
 
-// const isServer = typeof window === 'undefined';
-// const isProduction = process.env.NODE_ENV === 'production';
+// In-memory token storage
+let accessToken: string | null = null;
+
+export function setAccessToken(token: string | null) {
+	accessToken = token;
+}
+
+export function getAccessToken() {
+	return accessToken;
+}
 
 const axiosInstance: CustomAxiosInstance = axios.create({
 	baseURL: "/api",
 	withCredentials: true,
 });
 
-axiosInstance.interceptors.response.use((response) => response.data);
+// Request interceptor - attach Authorization header
+axiosInstance.interceptors.request.use((config) => {
+	if (accessToken) {
+		config.headers.Authorization = `Bearer ${accessToken}`;
+	}
+	return config;
+});
+
+// Token refresh queue for concurrent 401 handling
+let isRefreshing = false;
+let failedQueue: Array<{
+	resolve: (value: unknown) => void;
+	reject: (reason?: unknown) => void;
+}> = [];
+
+const processQueue = (error: unknown) => {
+	for (const { resolve, reject } of failedQueue) {
+		if (error) {
+			reject(error);
+		} else {
+			resolve(undefined);
+		}
+	}
+	failedQueue = [];
+};
+
+// Response interceptor - extract data & handle 401 token refresh
+axiosInstance.interceptors.response.use(
+	(response) => response.data,
+	async (error) => {
+		const originalRequest = error.config;
+
+		if (
+			error.response?.status === 401 &&
+			// biome-ignore lint/suspicious/noExplicitAny: flag to prevent infinite retry
+			!(originalRequest as any)._retry &&
+			originalRequest.url !== "/auth/token"
+		) {
+			if (isRefreshing) {
+				return new Promise((resolve, reject) => {
+					failedQueue.push({ resolve, reject });
+				}).then(() => axiosInstance(originalRequest));
+			}
+
+			// biome-ignore lint/suspicious/noExplicitAny: flag to prevent infinite retry
+			(originalRequest as any)._retry = true;
+			isRefreshing = true;
+
+			try {
+				const data = await axiosInstance.post<{ accessToken: string }>(
+					"/auth/token",
+					{},
+				);
+				setAccessToken(data.accessToken);
+				processQueue(null);
+				return axiosInstance(originalRequest);
+			} catch (refreshError) {
+				processQueue(refreshError);
+				setAccessToken(null);
+				return Promise.reject(refreshError);
+			} finally {
+				isRefreshing = false;
+			}
+		}
+
+		return Promise.reject(error);
+	},
+);
 
 export const http = {
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
