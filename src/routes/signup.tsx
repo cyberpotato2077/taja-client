@@ -10,7 +10,8 @@ import {
 } from "@/remotes/auth";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import confetti from "canvas-confetti";
 
 export const Route = createFileRoute("/signup")({
 	component: RouteComponent,
@@ -28,6 +29,7 @@ function RouteComponent() {
 	const [isNameChecked, setIsNameChecked] = useState(false);
 	const [isEmailVerified, setIsEmailVerified] = useState(false);
 	const [isCodeSent, setIsCodeSent] = useState(false);
+	const [isSignupSuccess, setIsSignupSuccess] = useState(false);
 
 	const nameCheckMutation = useMutation({
 		mutationFn: checkNameDuplicate,
@@ -55,9 +57,25 @@ function RouteComponent() {
 	const signupMutation = useMutation({
 		mutationFn: signup,
 		onSuccess: () => {
-			router.navigate({ to: "/my" });
+			setIsSignupSuccess(true);
+			// 콘페티 효과
+			confetti({
+				particleCount: 100,
+				spread: 70,
+				origin: { y: 0.6 },
+			});
 		},
 	});
+
+	// 회원가입 성공 시 3초 후 /my로 이동
+	useEffect(() => {
+		if (isSignupSuccess) {
+			const timer = setTimeout(() => {
+				router.navigate({ to: "/my" });
+			}, 3000);
+			return () => clearTimeout(timer);
+		}
+	}, [isSignupSuccess, router]);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -95,6 +113,26 @@ function RouteComponent() {
 		formData.password !== "" &&
 		formData.confirmPassword !== "" &&
 		!passwordMismatch;
+
+	// 회원가입 성공 화면
+	if (isSignupSuccess) {
+		return (
+			<LayoutWithTop title="회원가입">
+				<div className="flex flex-col items-center justify-center min-h-[60vh] p-4 space-y-6">
+					<div className="text-center space-y-4">
+						<div className="text-6xl">🎉</div>
+						<h2 className="text-2xl font-bold">회원가입 완료!</h2>
+						<p className="text-gray-600">
+							회원가입이 성공적으로 완료되었습니다.
+						</p>
+						<p className="text-sm text-gray-500">
+							잠시 후 자동으로 이동됩니다...
+						</p>
+					</div>
+				</div>
+			</LayoutWithTop>
+		);
+	}
 
 	return (
 		<LayoutWithTop
