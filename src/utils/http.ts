@@ -1,5 +1,12 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 
+// 백엔드 API 공통 응답 형식
+type ApiResponse<T> = {
+	code: string;
+	message: string;
+	data: T;
+};
+
 interface CustomAxiosInstance extends AxiosInstance {
 	getUri(config?: AxiosRequestConfig): string;
 	request<T>(config: AxiosRequestConfig): Promise<T>;
@@ -72,7 +79,11 @@ const processQueue = (error: unknown) => {
 
 // Response interceptor - extract data & handle 401 token refresh
 axiosInstance.interceptors.response.use(
-	(response) => response.data,
+	(response) => {
+		// 백엔드 API 응답 형식: {code, message, data}에서 data만 추출
+		const apiResponse = response.data as ApiResponse<unknown>;
+		return apiResponse.data ?? response.data;
+	},
 	async (error) => {
 		const originalRequest = error.config;
 
@@ -97,7 +108,13 @@ axiosInstance.interceptors.response.use(
 					"/auth/token",
 					{},
 				);
-				setAccessToken(data.accessToken);
+				// data는 이미 interceptor에서 추출된 상태
+				const token = typeof data === 'object' && data !== null && 'accessToken' in data
+					? data.accessToken
+					: null;
+				if (token) {
+					setAccessToken(token);
+				}
 				processQueue(null);
 				return axiosInstance(originalRequest);
 			} catch (refreshError) {

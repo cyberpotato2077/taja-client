@@ -63,5 +63,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base:"/taja-client/"
+  base:"/taja-client/",
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://taja.myvnc.com:8888',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })
