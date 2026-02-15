@@ -25,8 +25,21 @@ interface CustomAxiosInstance extends AxiosInstance {
 	patch<T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
 }
 
-// In-memory token storage
+// Token storage with localStorage persistence
+const TOKEN_STORAGE_KEY = "taja_access_token";
+
+// Initialize token from localStorage on module load
 let accessToken: string | null = null;
+
+// Initialize token from localStorage
+try {
+	const storedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+	if (storedToken) {
+		accessToken = storedToken;
+	}
+} catch (error) {
+	console.error("Failed to load token from localStorage:", error);
+}
 
 // Subscriber pattern for reactive token updates
 type Listener = () => void;
@@ -39,6 +52,18 @@ export function subscribeToToken(listener: Listener) {
 
 export function setAccessToken(token: string | null) {
 	accessToken = token;
+
+	// Persist to localStorage
+	try {
+		if (token) {
+			localStorage.setItem(TOKEN_STORAGE_KEY, token);
+		} else {
+			localStorage.removeItem(TOKEN_STORAGE_KEY);
+		}
+	} catch (error) {
+		console.error("Failed to save token to localStorage:", error);
+	}
+
 	// Notify all subscribers when token changes
 	for (const listener of listeners) {
 		listener();
