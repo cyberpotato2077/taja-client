@@ -13,14 +13,14 @@ export function StationMarkers() {
 	const navigate = useNavigate();
 	const map = useMap();
 
-	const [{ activeStationId }, setMainQueryStates] = useMainQueryStates();
+	const [{ activeStationId, latitude, longitude, latDelta, lngDelta }, setMainQueryStates] = useMainQueryStates();
 
 	const { data } = useQuery(
 		stationQueryOptions.markers({
-			latitude: 0,
-			latDelta: 0,
-			longitude: 0,
-			lngDelta: 0,
+			latitude: latitude ?? 0,
+			latDelta: latDelta ?? 0,
+			longitude: longitude ?? 0,
+			lngDelta: lngDelta ?? 0,
 		}),
 	);
 
