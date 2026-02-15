@@ -1,6 +1,7 @@
 import { LayoutWithTop } from "@/components/layout-with-top";
 import { PostList } from "@/components/post-list";
 import { stationQueryOptions } from "@/queries/station-query-options";
+import { Suspense } from "@suspensive/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 
@@ -23,10 +24,12 @@ function RouteComponent() {
 			showBackButton
 			onBackButtonClick={() => router.history.back()}
 		>
-			<div className="p-4">
-				<h2 className="text-lg font-semibold mb-4">최근 메시지</h2>
-				<PostList posts={postsData.posts} />
-			</div>
+			<Suspense fallback={<div>Loading...</div>}>
+				<div className="p-4">
+					<h2 className="text-lg font-semibold mb-4">최근 메시지</h2>
+					<PostList posts={postsData.posts} />
+				</div>
+			</Suspense>
 		</LayoutWithTop>
 	);
 }
