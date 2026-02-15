@@ -2,7 +2,7 @@ import { LayoutWithTop } from "@/components/layout-with-top";
 import { rankingQueryOptions } from "@/queries/ranking-query-options";
 import type { Item } from "@/remotes/get-daily-ranked-posts";
 import { Suspense } from "@suspensive/react";
-import { SuspenseQuery } from "@suspensive/react-query";
+import { SuspenseQuery } from "@suspensive/react-query-5";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Heart, MapPin, MessageCircle, Trophy } from "lucide-react";
 
