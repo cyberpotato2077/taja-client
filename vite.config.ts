@@ -67,7 +67,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://taja.myvnc.com:8888',
+        target: 'https://taja.myvnc.com:8888',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { match } from "ts-pattern";
+import { getMSWState } from "./msw-toggle";
 import { getOperation } from "./operations";
 
 // 백엔드 API 공통 응답 형식
@@ -48,16 +49,27 @@ export function getAccessToken() {
 	return accessToken;
 }
 
-const axiosInstance: CustomAxiosInstance = axios.create({
-	baseURL: match(getOperation())
+// baseURL을 동적으로 결정하는 함수
+function getBaseURL() {
+	return match(getOperation())
 		.with("local", () => "/api")
-		.with("live", () => "http://taja.myvnc.com:8888")
-		.exhaustive(),
+		.with("live", () => {
+			// MSW가 켜져 있으면 /api 사용 (MSW가 가로챔)
+			// MSW가 꺼져 있으면 실제 서버 주소 사용
+			return getMSWState() ? "/api" : "https://taja.myvnc.com:8888";
+		})
+		.exhaustive();
+}
+
+const axiosInstance: CustomAxiosInstance = axios.create({
 	withCredentials: true,
 });
 
-// Request interceptor - attach Authorization header
+// Request interceptor - attach Authorization header & set baseURL dynamically
 axiosInstance.interceptors.request.use((config) => {
+	// 매 요청마다 baseURL을 동적으로 설정 (MSW 토글 대응)
+	config.baseURL = getBaseURL();
+
 	if (accessToken) {
 		config.headers.Authorization = `Bearer ${accessToken}`;
 	}
