@@ -1,4 +1,6 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
+import { match } from "ts-pattern";
+import { getOperation } from "./operations";
 
 // 백엔드 API 공통 응답 형식
 type ApiResponse<T> = {
@@ -47,7 +49,10 @@ export function getAccessToken() {
 }
 
 const axiosInstance: CustomAxiosInstance = axios.create({
-	baseURL: "/api",
+	baseURL: match(getOperation())
+		.with("local", () => "/api")
+		.with("live", () => "http://taja.myvnc.com:8888")
+		.exhaustive(),
 	withCredentials: true,
 });
 
@@ -109,9 +114,10 @@ axiosInstance.interceptors.response.use(
 					{},
 				);
 				// data는 이미 interceptor에서 추출된 상태
-				const token = typeof data === 'object' && data !== null && 'accessToken' in data
-					? data.accessToken
-					: null;
+				const token =
+					typeof data === "object" && data !== null && "accessToken" in data
+						? data.accessToken
+						: null;
 				if (token) {
 					setAccessToken(token);
 				}
