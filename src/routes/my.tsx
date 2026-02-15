@@ -7,8 +7,9 @@ import { useMSWToggle } from "@/hooks/use-msw-toggle";
 import { logout } from "@/remotes/auth";
 import { getMember } from "@/remotes/get-member";
 import { setAccessToken } from "@/utils/http";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Suspense } from "react";
 
 export const Route = createFileRoute("/my")({
 	component: RouteComponent,
@@ -30,7 +31,19 @@ function RouteComponent() {
 					<Label htmlFor="msw-toggle">MSW (Mock Service Worker)</Label>
 				</div>
 
-				{isLoggedIn ? <LoggedInView /> : <LoggedOutView />}
+				{isLoggedIn ? (
+					<Suspense
+						fallback={
+							<div className="text-center py-8">
+								<p className="text-gray-600">로딩 중...</p>
+							</div>
+						}
+					>
+						<LoggedInView />
+					</Suspense>
+				) : (
+					<LoggedOutView />
+				)}
 			</div>
 		</LayoutWithTop>
 	);
@@ -39,7 +52,7 @@ function RouteComponent() {
 function LoggedInView() {
 	const queryClient = useQueryClient();
 
-	const { data: memberData, isLoading } = useQuery({
+	const { data: memberData } = useSuspenseQuery({
 		queryKey: ["member"],
 		queryFn: getMember,
 		retry: false,
@@ -57,18 +70,6 @@ function LoggedInView() {
 	const handleLogout = () => {
 		logoutMutation.mutate();
 	};
-
-	if (isLoading) {
-		return (
-			<div className="text-center py-8">
-				<p className="text-gray-600">로딩 중...</p>
-			</div>
-		);
-	}
-
-	if (!memberData) {
-		return null;
-	}
 
 	return (
 		<div className="space-y-4">
