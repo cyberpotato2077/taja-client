@@ -2,10 +2,11 @@ import { LayoutWithTop } from "@/components/layout-with-top";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/hooks/use-auth";
 import { useMSWToggle } from "@/hooks/use-msw-toggle";
 import { logout } from "@/remotes/auth";
 import { getMember } from "@/remotes/get-member";
-import { getAccessToken, setAccessToken } from "@/utils/http";
+import { setAccessToken } from "@/utils/http";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/my")({
 
 function RouteComponent() {
 	const { isEnabled, toggleMSW } = useMSWToggle();
-	const isLoggedIn = !!getAccessToken();
+	const { isLoggedIn } = useAuth();
 
 	return (
 		<LayoutWithTop showBackButton title="My" customButton={<Button>hi</Button>}>
