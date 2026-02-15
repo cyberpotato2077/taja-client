@@ -18,8 +18,21 @@ interface CustomAxiosInstance extends AxiosInstance {
 // In-memory token storage
 let accessToken: string | null = null;
 
+// Subscriber pattern for reactive token updates
+type Listener = () => void;
+const listeners = new Set<Listener>();
+
+export function subscribeToToken(listener: Listener) {
+	listeners.add(listener);
+	return () => listeners.delete(listener);
+}
+
 export function setAccessToken(token: string | null) {
 	accessToken = token;
+	// Notify all subscribers when token changes
+	for (const listener of listeners) {
+		listener();
+	}
 }
 
 export function getAccessToken() {

@@ -11,3 +11,4 @@ count.txt
 # Environment variables
 .env
 .aider*
+.omc

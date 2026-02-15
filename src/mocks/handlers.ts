@@ -3,6 +3,9 @@ import { getNearbyStationsMock } from "@/remotes/get-nearby-stations/mock";
 import { getStationMock } from "@/remotes/get-station/mock";
 import { getSearchStationsMock } from "@/remotes/search-stations/mock";
 
+// Member
+import { getMemberMock } from "@/remotes/get-member/mock";
+
 // Authentication
 import {
 	checkNameDuplicateMock,
@@ -49,6 +52,7 @@ export const handlers = [
 	verifyEmailMock,
 
 	// Member
+	getMemberMock,
 	getJoinedBoardsMock,
 
 	// Existing handlers
