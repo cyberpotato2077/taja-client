@@ -5,6 +5,7 @@ import type { MapStationResponse } from "@/remotes/get-nearby-stations";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
+import { Bike } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StationDrawer } from "./station-drawer";
 
@@ -75,6 +76,13 @@ export function StationMarkers() {
 		};
 	}, [activeStationId, overlay, navigate, setMainQueryStates]);
 
+	const getBikeCountColor = (count: number) => {
+		if (count >= 10) return "bg-green-500 hover:bg-green-600";
+		if (count >= 5) return "bg-yellow-500 hover:bg-yellow-600";
+		if (count >= 1) return "bg-orange-500 hover:bg-orange-600";
+		return "bg-red-500 hover:bg-red-600";
+	};
+
 	return (
 		<>
 			{data?.map((station: MapStationResponse) => (
@@ -93,7 +101,19 @@ export function StationMarkers() {
 							activeStationId: station.stationId,
 						});
 					}}
-				/>
+				>
+					<div
+						className={`flex flex-col items-center justify-center min-w-12 h-12 px-2 rounded-full shadow-lg cursor-pointer transition-colors border-4 border-white ${getBikeCountColor(station.bikeCount)}`}
+						style={{
+							transform: "translate(-50%, -50%)",
+						}}
+					>
+						<span className="text-white font-bold text-lg leading-tight">
+							{station.bikeCount}
+						</span>
+						<Bike className="w-4 h-4 text-white" />
+					</div>
+				</AdvancedMarker>
 			))}
 		</>
 	);
