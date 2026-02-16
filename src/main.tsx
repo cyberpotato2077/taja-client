@@ -8,7 +8,6 @@ import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provi
 import { routeTree } from "./routeTree.gen";
 
 import "./styles.css";
-import { OverlayProvider } from "overlay-kit";
 import reportWebVitals from "./reportWebVitals.ts";
 import { getMSWState } from "./utils/msw-toggle";
 
@@ -68,9 +67,7 @@ if (rootElement && !rootElement.innerHTML) {
 		root.render(
 			<StrictMode>
 				<TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-					<OverlayProvider>
-						<RouterProvider router={router} />
-					</OverlayProvider>
+					<RouterProvider router={router} />
 				</TanStackQueryProvider.Provider>
 			</StrictMode>,
 		);
