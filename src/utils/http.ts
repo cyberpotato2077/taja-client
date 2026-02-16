@@ -186,7 +186,8 @@ export const http = {
 	patch: <T>(url: string, data: any) => {
 		return axiosInstance.patch<T>(url, data);
 	},
-	delete: <T>(url: string) => {
-		return axiosInstance.delete<T>(url);
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	delete: <T>(url: string, data?: any) => {
+		return axiosInstance.delete<T>(url, { data });
 	},
 };
