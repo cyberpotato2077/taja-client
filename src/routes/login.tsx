@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/remotes/auth";
 import { setAccessToken } from "@/utils/http";
+import { getMSWState } from "@/utils/msw-toggle";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
@@ -18,6 +19,7 @@ function RouteComponent() {
 		email: "",
 		password: "",
 	});
+	const isMSWEnabled = getMSWState();
 
 	const loginMutation = useMutation({
 		mutationFn: login,
@@ -37,6 +39,13 @@ function RouteComponent() {
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			setFormData((prev) => ({ ...prev, [field]: e.target.value }));
 		};
+
+	const handleMSWLogin = () => {
+		loginMutation.mutate({
+			email: "test@example.com",
+			password: "password",
+		});
+	};
 
 	return (
 		<LayoutWithTop
@@ -82,6 +91,29 @@ function RouteComponent() {
 						{loginMutation.isPending ? "로그인 중..." : "로그인"}
 					</Button>
 				</form>
+
+				{isMSWEnabled && (
+					<div className="space-y-2">
+						<div className="relative">
+							<div className="absolute inset-0 flex items-center">
+								<span className="w-full border-t" />
+							</div>
+							<div className="relative flex justify-center text-xs uppercase">
+								<span className="bg-background px-2 text-muted-foreground">
+									개발 모드
+								</span>
+							</div>
+						</div>
+						<Button
+							variant="secondary"
+							className="w-full"
+							onClick={handleMSWLogin}
+							disabled={loginMutation.isPending}
+						>
+							MSW 자동 로그인
+						</Button>
+					</div>
+				)}
 
 				<div className="space-y-2">
 					<div className="text-center text-sm text-gray-600">
