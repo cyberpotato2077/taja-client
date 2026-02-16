@@ -4,6 +4,7 @@ import { stationQueryOptions } from "@/queries/station-query-options";
 import { Suspense } from "@suspensive/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { PenSquare } from "lucide-react";
 
 export const Route = createFileRoute("/station/$id/posts/")({
 	component: RouteComponent,
@@ -16,8 +17,16 @@ export const Route = createFileRoute("/station/$id/posts/")({
 
 function RouteComponent() {
 	const router = useRouter();
+	const { id } = Route.useParams();
 	const { postsQueryOptions: queryOptions } = Route.useLoaderData();
 	const { data: postsData } = useSuspenseQuery(queryOptions);
+
+	const handleWritePost = () => {
+		router.navigate({
+			to: "/station/$id/posts/new",
+			params: { id },
+		});
+	};
 
 	return (
 		<LayoutWithTop
@@ -26,7 +35,17 @@ function RouteComponent() {
 		>
 			<Suspense fallback={<div>Loading...</div>}>
 				<div className="p-4">
-					<h2 className="text-lg font-semibold mb-4">게시판</h2>
+					<div className="flex items-center justify-between mb-4">
+						<h2 className="text-lg font-semibold">게시판</h2>
+						<button
+							type="button"
+							onClick={handleWritePost}
+							className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+						>
+							<PenSquare className="w-4 h-4" />
+							글쓰기
+						</button>
+					</div>
 					<PostList posts={postsData.posts} />
 				</div>
 			</Suspense>

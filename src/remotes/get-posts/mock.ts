@@ -1,32 +1,41 @@
+import { getPostsByStationId } from "@/mocks/data/posts";
 import { http, HttpResponse } from "msw";
 import type { PostListResponse } from "./index";
 
-const mockPosts: PostListResponse = {
-	posts: [
-		{
-			stationId: 1,
-			postId: 1,
-			writer: "김태자",
-			createdAt: "2024-01-15T10:30:00Z",
-			content: "오늘 이곳 자전거 많네요!",
-			commentCount: 3,
-			likeCount: 5,
-			liked: false,
-		},
-		{
-			stationId: 1,
-			postId: 2,
-			writer: "이자전거",
-			createdAt: "2024-01-15T09:15:00Z",
-			content: "새로운 자전거가 추가되었어요",
-			commentCount: 1,
-			likeCount: 2,
-			liked: true,
-		},
-	],
-	nextCursor: "next-page-token",
-};
+export const getPostsMock = http.get(
+	"/api/stations/:stationId/posts",
+	({ params, request }) => {
+		const { stationId } = params;
+		const stationIdNum = Number(stationId);
 
-export const getPostsMock = http.get("/api/stations/:stationId/posts", () => {
-	return HttpResponse.json<PostListResponse>(mockPosts);
-});
+		// URL에서 쿼리 파라미터 가져오기
+		const url = new URL(request.url);
+		const size = Number(url.searchParams.get("size")) || 20;
+		const cursor = url.searchParams.get("cursor");
+
+		console.log("msw:get :: /api/stations/:stationId/posts", {
+			stationId: stationIdNum,
+			size,
+			cursor,
+		});
+
+		// 공통 데이터 소스에서 게시글 가져오기
+		const allPosts = getPostsByStationId(stationIdNum);
+
+		// cursor가 있으면 해당 위치부터, 없으면 처음부터
+		const startIndex = cursor ? Number(cursor) : 0;
+		const endIndex = startIndex + size;
+		const posts = allPosts.slice(startIndex, endIndex);
+
+		// 다음 페이지가 있는지 확인
+		const hasNext = endIndex < allPosts.length;
+		const nextCursor = hasNext ? String(endIndex) : null;
+
+		const response: PostListResponse = {
+			posts,
+			nextCursor: nextCursor || "",
+		};
+
+		return HttpResponse.json<PostListResponse>(response);
+	},
+);

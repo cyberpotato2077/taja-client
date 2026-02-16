@@ -22,6 +22,7 @@ export interface TodayAvailableBikeResponse {
 }
 
 export interface RecentPostResponse {
+	postId: number;
 	writer: string;
 	message: string;
 }

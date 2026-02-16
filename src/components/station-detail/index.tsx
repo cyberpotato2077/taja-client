@@ -95,6 +95,7 @@ export function StationDetail({
 			)}
 
 			<RecentMessages
+				stationId={station.stationId}
 				posts={station.recentPosts}
 				onViewMore={handleViewMorePosts}
 			/>
