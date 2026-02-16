@@ -204,7 +204,7 @@ export const addPost = (stationId: number, post: Omit<MockPost, "postId">) => {
  * 게시글 삭제
  */
 export const deletePost = (postId: number): boolean => {
-	for (const [stationId, posts] of Object.entries(MOCK_POSTS_BY_STATION)) {
+	for (const posts of Object.values(MOCK_POSTS_BY_STATION)) {
 		const index = posts.findIndex((p) => p.postId === postId);
 		if (index !== -1) {
 			posts.splice(index, 1);
