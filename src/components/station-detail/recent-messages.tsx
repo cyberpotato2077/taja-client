@@ -16,7 +16,7 @@ export function RecentMessages({ posts, onViewMore }: RecentMessagesProps) {
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center gap-2 mb-2">
 					<MessageCircle className="w-4 h-4 text-gray-600" />
-					<h3 className="text-sm font-semibold text-gray-700">최근 메시지</h3>
+					<h3 className="text-sm font-semibold text-gray-700">게시판</h3>
 					<span className="text-xs text-gray-500">({posts.length})</span>
 				</div>
 				<div>

@@ -26,7 +26,7 @@ function RouteComponent() {
 		>
 			<Suspense fallback={<div>Loading...</div>}>
 				<div className="p-4">
-					<h2 className="text-lg font-semibold mb-4">최근 메시지</h2>
+					<h2 className="text-lg font-semibold mb-4">게시판</h2>
 					<PostList posts={postsData.posts} />
 				</div>
 			</Suspense>
