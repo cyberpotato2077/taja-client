@@ -1,26 +1,6 @@
-import { MAP_RESTRICTION } from "@/constants/maps";
+import { getAllMapStations } from "@/mocks/data/stations";
 import { http, HttpResponse } from "msw";
 import type { MapStationResponse } from ".";
-
-const getRandomNumber = (min: number, max: number) => {
-	return Math.random() * (max - min) + min;
-};
-
-const createRandomStation = (index: number): MapStationResponse => ({
-	stationId: index,
-	number: index,
-	bikeCount: Math.floor(Math.random() * 20),
-	latitude: getRandomNumber(MAP_RESTRICTION.south, MAP_RESTRICTION.north),
-	longitude: getRandomNumber(MAP_RESTRICTION.west, MAP_RESTRICTION.east),
-	requestedAt: new Date().toISOString(),
-});
-
-const createMockStations = (size: number): MapStationResponse[] => {
-	return Array.from({ length: size }, (_, i) => createRandomStation(i + 1));
-};
-
-// 초기에 한번만 생성
-const MOCK_STATIONS = createMockStations(100);
 
 export const getNearbyStationsMock = http.get(
 	"/api/stations/map/nearby",
@@ -36,6 +16,9 @@ export const getNearbyStationsMock = http.get(
 			size,
 		});
 
-		return HttpResponse.json<MapStationResponse[]>(MOCK_STATIONS.slice(0, size));
+		const allStations = getAllMapStations();
+		return HttpResponse.json<MapStationResponse[]>(
+			allStations.slice(0, size),
+		);
 	},
 );
