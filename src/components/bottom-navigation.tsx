@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 
 export function BottomNavigation() {
 	return (
-		<nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 flex h-[56px] w-full max-w-screen-sm items-center justify-around bg-background shadow-[0_-2px_4px_rgba(0,0,0,0.1)]">
+		<nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 flex h-[56px] w-full max-w-screen-sm items-center justify-around bg-background pb-safe shadow-[0_-2px_4px_rgba(0,0,0,0.1)]" style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)' }}>
 			<Link
 				to="/"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
