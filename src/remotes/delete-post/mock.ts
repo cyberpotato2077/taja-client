@@ -1,3 +1,4 @@
+import { deletePost } from "@/mocks/data/posts";
 import { http, HttpResponse } from "msw";
 
 export const deletePostMock = http.delete(
@@ -5,7 +6,11 @@ export const deletePostMock = http.delete(
 	({ params }) => {
 		const postId = Number(params.postId);
 
-		if (postId === 1) {
+		console.log("msw:delete :: /api/posts/:postId", { postId });
+
+		const success = deletePost(postId);
+
+		if (success) {
 			return HttpResponse.json<string>("Post deleted successfully");
 		}
 

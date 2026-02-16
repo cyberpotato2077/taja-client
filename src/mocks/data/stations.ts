@@ -3,10 +3,10 @@ import type {
 	BikeCountByTimeResponse,
 	NearbyAvailableStationDetailResponse,
 	OperationMode,
-	RecentPostResponse,
 	StationDetailResponse,
 } from "@/remotes/get-station";
 import type { MapStationResponse } from "@/remotes/get-nearby-stations";
+import { getRecentPostsForStation } from "./posts";
 
 const getRandomNumber = (min: number, max: number) => {
 	return Math.random() * (max - min) + min;
@@ -95,14 +95,8 @@ export const toStationDetailResponse = (
 		},
 	);
 
-	// recentPosts
-	const recentPosts: RecentPostResponse[] = Array.from(
-		{ length: 3 },
-		(_, i) => ({
-			writer: `user_${i}`,
-			message: `message ${i}`,
-		}),
-	);
+	// recentPosts - 공통 posts 데이터에서 가져오기
+	const recentPosts = getRecentPostsForStation(station.stationId);
 
 	// nearbyAvailableStations - 현재 스테이션 근처 5개
 	const nearbyAvailableStations: NearbyAvailableStationDetailResponse[] =
