@@ -1,10 +1,7 @@
-import { addFavoriteStation } from "@/remotes/add-favorite-station";
-import { deleteFavoriteStation } from "@/remotes/delete-favorite-station";
 import type { StationDetailResponse } from "@/remotes/get-station";
-import { isFavoriteStation } from "@/remotes/is-favorite-station";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { useNavigate } from "@tanstack/react-router";
 import { CurrentStatusCard } from "./current-status-card";
+import { FavoriteButton } from "./favorite-button";
 import { LocationInfo } from "./location-info";
 import { NearbyStations } from "./nearby-stations";
 import { OperationModes } from "./operation-modes";
@@ -18,46 +15,6 @@ export function StationDetail({
 	station: StationDetailResponse;
 	navigate: ReturnType<typeof useNavigate>;
 }) {
-	const queryClient = useQueryClient();
-
-	const { data: favoriteData } = useQuery({
-		queryKey: ["favorite", station.stationId],
-		queryFn: () => isFavoriteStation(station.stationId),
-	});
-
-	const addFavoriteMutation = useMutation({
-		mutationFn: () => addFavoriteStation(station.stationId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ["favorite", station.stationId],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["station", "favorites"],
-			});
-		},
-	});
-
-	const deleteFavoriteMutation = useMutation({
-		mutationFn: () => deleteFavoriteStation(station.stationId),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ["favorite", station.stationId],
-			});
-			queryClient.invalidateQueries({
-				queryKey: ["station", "favorites"],
-			});
-		},
-	});
-
-	const isFavorite = favoriteData?.isFavorite ?? false;
-
-	const handleToggleFavorite = () => {
-		if (isFavorite) {
-			deleteFavoriteMutation.mutate();
-		} else {
-			addFavoriteMutation.mutate();
-		}
-	};
 
 	const latestObserved =
 		station.todayAvailableBike?.observedBikeCountByHour?.slice(-1)[0]
@@ -81,11 +38,7 @@ export function StationDetail({
 				stationId={station.stationId}
 				name={station.name}
 				address={station.address}
-				isFavorite={isFavorite}
-				onToggleFavorite={handleToggleFavorite}
-				isLoading={
-					addFavoriteMutation.isPending || deleteFavoriteMutation.isPending
-				}
+				rightAddon={<FavoriteButton stationId={station.stationId} />}
 			/>
 
 			<CurrentStatusCard
