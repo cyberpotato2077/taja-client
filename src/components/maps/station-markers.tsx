@@ -8,7 +8,6 @@ import type {
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
-import { Bike } from "lucide-react";
 import { useEffect, useState } from "react";
 import { StationDrawer } from "./station-drawer";
 
@@ -158,7 +157,6 @@ export function StationMarkers() {
 							<span className="text-white font-bold text-lg leading-tight">
 								{station.bikeCount}
 							</span>
-							<Bike className="w-4 h-4 text-white" />
 						</div>
 					</AdvancedMarker>
 				))}
