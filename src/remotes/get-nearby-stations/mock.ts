@@ -19,6 +19,9 @@ const createMockStations = (size: number): MapStationResponse[] => {
 	return Array.from({ length: size }, (_, i) => createRandomStation(i + 1));
 };
 
+// 초기에 한번만 생성
+const MOCK_STATIONS = createMockStations(100);
+
 export const getNearbyStationsMock = http.get(
 	"/api/stations/map/nearby",
 	({ request }) => {
@@ -33,6 +36,6 @@ export const getNearbyStationsMock = http.get(
 			size,
 		});
 
-		return HttpResponse.json<MapStationResponse[]>(createMockStations(size));
+		return HttpResponse.json<MapStationResponse[]>(MOCK_STATIONS.slice(0, size));
 	},
 );
