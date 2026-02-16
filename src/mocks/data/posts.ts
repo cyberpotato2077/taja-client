@@ -146,6 +146,7 @@ export const getRecentPostsForStation = (
 ): RecentPostResponse[] => {
 	const posts = getPostsByStationId(stationId);
 	return posts.slice(0, 3).map((post) => ({
+		postId: post.postId,
 		writer: post.writer,
 		message: post.content,
 	}));

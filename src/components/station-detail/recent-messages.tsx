@@ -1,15 +1,33 @@
 import type { RecentPostResponse } from "@/remotes/get-station";
+import { useRouter } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
 
 interface RecentMessagesProps {
+	stationId: number;
 	posts: RecentPostResponse[];
 	onViewMore: () => void;
 }
 
-export function RecentMessages({ posts, onViewMore }: RecentMessagesProps) {
+export function RecentMessages({
+	stationId,
+	posts,
+	onViewMore,
+}: RecentMessagesProps) {
+	const router = useRouter();
+
 	if (!posts || posts.length === 0) {
 		return null;
 	}
+
+	const handlePostClick = (postId: number) => {
+		router.navigate({
+			to: "/station/$id/posts/$postId",
+			params: {
+				id: String(stationId),
+				postId: String(postId),
+			},
+		});
+	};
 
 	return (
 		<div>
@@ -30,11 +48,15 @@ export function RecentMessages({ posts, onViewMore }: RecentMessagesProps) {
 				</div>
 			</div>
 			<div className="space-y-2">
-				{posts.slice(0, 3).map((message: RecentPostResponse, index: number) => (
-					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-					<div key={index} className="bg-gray-50 rounded-lg p-2">
+				{posts.slice(0, 3).map((message: RecentPostResponse) => (
+					<button
+						key={message.postId}
+						type="button"
+						className="w-full bg-gray-50 hover:bg-gray-100 rounded-lg p-2 transition-colors text-left"
+						onClick={() => handlePostClick(message.postId)}
+					>
 						<div className="flex items-start gap-2">
-							<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+							<div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-medium shrink-0">
 								{message.writer?.[0]?.toUpperCase() || "U"}
 							</div>
 							<div className="flex-1 min-w-0">
@@ -46,7 +68,7 @@ export function RecentMessages({ posts, onViewMore }: RecentMessagesProps) {
 								</div>
 							</div>
 						</div>
-					</div>
+					</button>
 				))}
 			</div>
 		</div>
