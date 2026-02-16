@@ -16,14 +16,32 @@ export type MapStationResponse = {
 	requestedAt: string;
 };
 
+export type MapClusterResponse = {
+	latitude: number;
+	longitude: number;
+	stationCount: number;
+};
+
+export type NearbyStationsResponse =
+	| {
+			viewType: "stations";
+			stations: MapStationResponse[];
+			clusters: null;
+	  }
+	| {
+			viewType: "clusters";
+			stations: null;
+			clusters: MapClusterResponse[];
+	  };
+
 export function findNearbyStations(params: NearbyStationRequest) {
-	return http.get<MapStationResponse[]>("/stations/map/nearby", params);
+	return http.get<NearbyStationsResponse>("/stations/map/nearby", params);
 }
 
 export function findNearbyStationsNoGeo(params: NearbyStationRequest) {
-	return http.get<MapStationResponse[]>("/stations/map/nearby/no-geo", params);
+	return http.get<NearbyStationsResponse>("/stations/map/nearby/no-geo", params);
 }
 
 export function findNearbyStationsIndexed(params: NearbyStationRequest) {
-	return http.get<MapStationResponse[]>("/stations/map/nearby/indexed", params);
+	return http.get<NearbyStationsResponse>("/stations/map/nearby/indexed", params);
 }

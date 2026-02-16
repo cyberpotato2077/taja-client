@@ -1,7 +1,10 @@
 import { useMainQueryStates } from "@/hooks/use-main-query-states";
 import { useOverlay } from "@/hooks/use-overlay";
 import { stationQueryOptions } from "@/queries/station-query-options";
-import type { MapStationResponse } from "@/remotes/get-nearby-stations";
+import type {
+	MapClusterResponse,
+	MapStationResponse,
+} from "@/remotes/get-nearby-stations";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
@@ -83,38 +86,85 @@ export function StationMarkers() {
 		return "bg-red-500 hover:bg-red-600";
 	};
 
-	return (
-		<>
-			{data?.map((station: MapStationResponse) => (
-				<AdvancedMarker
-					key={`${station.latitude}-${station.longitude}`}
-					position={{
-						lat: station.latitude,
-						lng: station.longitude,
-					}}
-					onClick={() => {
-						map.panTo({
-							lat: station.latitude,
-							lng: station.longitude,
-						});
-						setMainQueryStates({
-							activeStationId: station.stationId,
-						});
-					}}
-				>
-					<div
-						className={`flex flex-col items-center justify-center min-w-12 h-12 px-2 rounded-full shadow-lg cursor-pointer transition-colors border-4 border-white ${getBikeCountColor(station.bikeCount)}`}
-						style={{
-							transform: "translate(-50%, -50%)",
+	const getClusterColor = (count: number) => {
+		if (count >= 100) return "bg-purple-500 hover:bg-purple-600";
+		if (count >= 50) return "bg-blue-500 hover:bg-blue-600";
+		if (count >= 20) return "bg-indigo-500 hover:bg-indigo-600";
+		return "bg-cyan-500 hover:bg-cyan-600";
+	};
+
+	// 클러스터 마커 렌더링
+	if (data?.viewType === "clusters" && data.clusters) {
+		return (
+			<>
+				{data.clusters.map((cluster: MapClusterResponse, index: number) => (
+					<AdvancedMarker
+						key={`cluster-${cluster.latitude}-${cluster.longitude}-${index}`}
+						position={{
+							lat: cluster.latitude,
+							lng: cluster.longitude,
+						}}
+						onClick={() => {
+							map.panTo({
+								lat: cluster.latitude,
+								lng: cluster.longitude,
+							});
+							map.setZoom((map.getZoom() ?? 10) + 2);
 						}}
 					>
-						<span className="text-white font-bold text-lg leading-tight">
-							{station.bikeCount}
-						</span>
-						<Bike className="w-4 h-4 text-white" />
-					</div>
-				</AdvancedMarker>
-			))}
-		</>
-	);
+						<div
+							className={`flex items-center justify-center min-w-14 h-14 px-3 rounded-full shadow-xl cursor-pointer transition-colors border-4 border-white ${getClusterColor(cluster.stationCount)}`}
+							style={{
+								transform: "translate(-50%, -50%)",
+							}}
+						>
+							<span className="text-white font-bold text-xl">
+								{cluster.stationCount}
+							</span>
+						</div>
+					</AdvancedMarker>
+				))}
+			</>
+		);
+	}
+
+	// 개별 대여소 마커 렌더링
+	if (data?.viewType === "stations" && data.stations) {
+		return (
+			<>
+				{data.stations.map((station: MapStationResponse) => (
+					<AdvancedMarker
+						key={`${station.latitude}-${station.longitude}`}
+						position={{
+							lat: station.latitude,
+							lng: station.longitude,
+						}}
+						onClick={() => {
+							map.panTo({
+								lat: station.latitude,
+								lng: station.longitude,
+							});
+							setMainQueryStates({
+								activeStationId: station.stationId,
+							});
+						}}
+					>
+						<div
+							className={`flex flex-col items-center justify-center min-w-12 h-12 px-2 rounded-full shadow-lg cursor-pointer transition-colors border-4 border-white ${getBikeCountColor(station.bikeCount)}`}
+							style={{
+								transform: "translate(-50%, -50%)",
+							}}
+						>
+							<span className="text-white font-bold text-lg leading-tight">
+								{station.bikeCount}
+							</span>
+							<Bike className="w-4 h-4 text-white" />
+						</div>
+					</AdvancedMarker>
+				))}
+			</>
+		);
+	}
+
+	return null;
 }
