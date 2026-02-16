@@ -2,6 +2,7 @@ import type { StationDetailResponse } from "@/remotes/get-station";
 import type { useNavigate } from "@tanstack/react-router";
 import { RefreshCw, Share2 } from "lucide-react";
 import { Suspense } from "react";
+import { BikeCountChart } from "./bike-count-chart";
 import { FavoriteButton } from "./favorite-button";
 import { LocationInfo } from "./location-info";
 import { NearbyStations } from "./nearby-stations";
@@ -89,6 +90,11 @@ export function StationDetail({
 					공유
 				</button>
 			</div>
+
+			{/* 오늘의 남은 자전거 그래프 */}
+			{station.todayAvailableBike && (
+				<BikeCountChart data={station.todayAvailableBike} />
+			)}
 
 			<RecentMessages
 				posts={station.recentPosts}
