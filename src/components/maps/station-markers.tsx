@@ -112,7 +112,7 @@ export function StationMarkers() {
 						}}
 					>
 						<div
-							className={`flex items-center justify-center min-w-14 h-14 px-3 rounded-full shadow-xl cursor-pointer transition-colors border-4 border-white ${getClusterColor(cluster.stationCount)}`}
+							className={`flex items-center justify-center min-w-14 h-14 px-3 rounded-full shadow-xl cursor-pointer transition-colors  ${getClusterColor(cluster.stationCount)}`}
 							style={{
 								transform: "translate(-50%, -50%)",
 							}}
@@ -149,7 +149,7 @@ export function StationMarkers() {
 						}}
 					>
 						<div
-							className={`flex flex-col items-center justify-center min-w-12 h-12 px-2 rounded-full shadow-lg cursor-pointer transition-colors border-4 border-white ${getBikeCountColor(station.bikeCount)}`}
+							className={`flex flex-col items-center justify-center min-w-12 h-12 px-2 rounded-full shadow-lg cursor-pointer transition-colors  ${getBikeCountColor(station.bikeCount)}`}
 							style={{
 								transform: "translate(-50%, -50%)",
 							}}
