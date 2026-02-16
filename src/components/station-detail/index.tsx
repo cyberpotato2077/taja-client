@@ -42,16 +42,9 @@ export function StationDetail({
 	return (
 		<div className="p-4 pb-0 space-y-4">
 			{/* 상단 헤더 섹션 */}
-			<div className="relative">
-				{/* 우측 상단 즐겨찾기 버튼 */}
-				<div className="absolute top-0 right-0">
-					<Suspense fallback={<div className="w-9 h-9" />}>
-						<FavoriteButton stationId={station.stationId} />
-					</Suspense>
-				</div>
-
+			<div>
 				{/* 메인 콘텐츠 영역 */}
-				<div className="flex items-start justify-between pr-12">
+				<div className="flex items-start justify-between">
 					{/* 좌측: 스테이션 정보 */}
 					<div className="flex-1">
 						<h1 className="text-2xl font-bold text-gray-900 mb-2">
@@ -81,14 +74,19 @@ export function StationDetail({
 					</div>
 				</div>
 
-				{/* 공유 버튼 */}
-				<button
-					type="button"
-					className="mt-4 px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium text-gray-700 flex items-center gap-2 transition-colors"
-				>
-					<Share2 className="w-4 h-4" />
-					공유
-				</button>
+				{/* 공유 버튼 및 즐겨찾기 버튼 */}
+				<div className="mt-4 flex items-center justify-between">
+					<button
+						type="button"
+						className="px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium text-gray-700 flex items-center gap-2 transition-colors"
+					>
+						<Share2 className="w-4 h-4" />
+						공유
+					</button>
+					<Suspense fallback={<div className="w-9 h-9" />}>
+						<FavoriteButton stationId={station.stationId} />
+					</Suspense>
+				</div>
 			</div>
 
 			{/* 오늘의 남은 자전거 그래프 */}
