@@ -81,7 +81,7 @@ function getBaseURL() {
 		.with("live", () => {
 			// MSW가 켜져 있으면 /api 사용 (MSW가 가로챔)
 			// MSW가 꺼져 있으면 실제 서버 주소 사용
-			return getMSWState() ? "/api" : "https://taja.myvnc.com:8888";
+			return getMSWState() ? "/api" : "https://taja.myvnc.com";
 		})
 		.exhaustive();
 }
