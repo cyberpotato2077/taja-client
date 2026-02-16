@@ -8,10 +8,17 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { stationQueryOptions } from "@/queries/station-query-options";
+import { addFavoriteStation } from "@/remotes/add-favorite-station";
+import { deleteFavoriteStation } from "@/remotes/delete-favorite-station";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Star } from "lucide-react";
 import { useState } from "react";
-import { useFavoriteStation } from "./use-favorite-station";
 
 interface FavoriteButtonProps {
 	stationId: number;
@@ -28,8 +35,46 @@ export function FavoriteButton({ stationId }: FavoriteButtonProps) {
 }
 
 function LoggedInFavoriteButton({ stationId }: { stationId: number }) {
-	const { isFavorite, toggleFavorite, isLoading } =
-		useFavoriteStation(stationId);
+	const queryClient = useQueryClient();
+
+	const {
+		data: { isFavorite },
+	} = useSuspenseQuery(stationQueryOptions.isFavorite(stationId));
+
+	const addFavoriteMutation = useMutation({
+		mutationFn: () => addFavoriteStation(stationId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: stationQueryOptions.isFavorite(stationId).queryKey,
+			});
+			queryClient.invalidateQueries({
+				queryKey: stationQueryOptions.favorites().queryKey,
+			});
+		},
+	});
+
+	const deleteFavoriteMutation = useMutation({
+		mutationFn: () => deleteFavoriteStation(stationId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: stationQueryOptions.isFavorite(stationId).queryKey,
+			});
+			queryClient.invalidateQueries({
+				queryKey: stationQueryOptions.favorites().queryKey,
+			});
+		},
+	});
+
+	const toggleFavorite = () => {
+		if (isFavorite) {
+			deleteFavoriteMutation.mutate();
+		} else {
+			addFavoriteMutation.mutate();
+		}
+	};
+
+	const isLoading =
+		addFavoriteMutation.isPending || deleteFavoriteMutation.isPending;
 
 	return (
 		<button
@@ -77,10 +122,7 @@ function LoggedOutFavoriteButton() {
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter>
-						<Button
-							variant="outline"
-							onClick={() => setShowLoginDialog(false)}
-						>
+						<Button variant="outline" onClick={() => setShowLoginDialog(false)}>
 							취소
 						</Button>
 						<Button onClick={handleGoToMyPage}>로그인/회원가입</Button>

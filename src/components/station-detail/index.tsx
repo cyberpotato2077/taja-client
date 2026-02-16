@@ -1,5 +1,6 @@
 import type { StationDetailResponse } from "@/remotes/get-station";
 import type { useNavigate } from "@tanstack/react-router";
+import { Suspense } from "react";
 import { CurrentStatusCard } from "./current-status-card";
 import { FavoriteButton } from "./favorite-button";
 import { LocationInfo } from "./location-info";
@@ -38,7 +39,11 @@ export function StationDetail({
 				stationId={station.stationId}
 				name={station.name}
 				address={station.address}
-				rightAddon={<FavoriteButton stationId={station.stationId} />}
+				rightAddon={
+					<Suspense fallback={<div className="w-9 h-9" />}>
+						<FavoriteButton stationId={station.stationId} />
+					</Suspense>
+				}
 			/>
 
 			<CurrentStatusCard

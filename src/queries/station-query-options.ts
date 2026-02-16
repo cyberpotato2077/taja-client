@@ -6,6 +6,7 @@ import {
 import { getPostDetail } from "@/remotes/get-post-detail";
 import { type GetPostsRequest, getPosts } from "@/remotes/get-posts";
 import { type GetStationRequest, getStation } from "@/remotes/get-station";
+import { isFavoriteStation } from "@/remotes/is-favorite-station";
 import {
 	type SearchStationRequest,
 	searchStation,
@@ -36,6 +37,12 @@ export const stationQueryOptions = {
 		return queryOptions({
 			queryKey: [...stationQueryOptions.station, "favorites"],
 			queryFn: () => findFavoriteStations(),
+		});
+	},
+	isFavorite: (stationId: number) => {
+		return queryOptions({
+			queryKey: [...stationQueryOptions.station, "isFavorite", stationId],
+			queryFn: () => isFavoriteStation(stationId),
 		});
 	},
 	posts: (params: GetPostsRequest) => {
