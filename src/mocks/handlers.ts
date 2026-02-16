@@ -5,6 +5,7 @@ import { getSearchStationsMock } from "@/remotes/search-stations/mock";
 
 // Member
 import { getMemberMock } from "@/remotes/get-member/mock";
+import { deleteMemberMock } from "@/remotes/delete-member/mock";
 
 // Authentication
 import {
@@ -53,6 +54,7 @@ export const handlers = [
 
 	// Member
 	getMemberMock,
+	deleteMemberMock,
 	getJoinedBoardsMock,
 
 	// Existing handlers
