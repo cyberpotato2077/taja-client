@@ -16,7 +16,6 @@ export const Route = createFileRoute("/station/$id/")({
 function StationPage() {
 	const { id } = useParams({ from: Route.id });
 	const router = useRouter();
-	const navigate = useNavigate();
 
 	const {
 		data: station,
@@ -35,7 +34,7 @@ function StationPage() {
 				router.history.back();
 			}}
 		>
-			<StationDetail station={station} navigate={navigate} />
+			<StationDetail station={station} />
 		</LayoutWithTop>
 	);
 }

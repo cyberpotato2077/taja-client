@@ -35,7 +35,7 @@ function RouteComponent() {
 	const { isLoggedIn } = useAuth();
 
 	return (
-		<LayoutWithTop showBackButton title="My" customButton={<Button>hi</Button>}>
+		<LayoutWithTop showBackButton title="My">
 			<div className="p-4 space-y-4">
 				<div className="flex items-center space-x-2">
 					<Switch

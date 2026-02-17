@@ -34,7 +34,7 @@ export function StationDrawer({ open, close, stationId }: StationDrawerProps) {
 					close();
 				}}
 			>
-				<div className="mx-auto w-full flex flex-col max-h-[70vh]">
+				<div className="flex-1 overflow-y-auto">
 					<Suspense
 						fallback={<div className="text-center h-[70vh]">Loading...</div>}
 					>

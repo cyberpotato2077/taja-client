@@ -3,26 +3,29 @@ import type { ComponentProps } from "react";
 
 export function BottomNavigation() {
 	return (
-		<nav className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 flex h-[56px] w-full max-w-screen-sm items-center justify-around bg-background pb-safe shadow-[0_-2px_4px_rgba(0,0,0,0.1)]" style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)' }}>
+		<nav
+			className="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 flex h-[70px] w-full max-w-screen-sm items-center justify-around bg-background pb-safe shadow-[0_-2px_4px_rgba(0,0,0,0.1)]"
+			style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)" }}
+		>
 			<Link
 				to="/"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
-				<HomeIcon className="h-6 w-6" />
+				<HomeIcon className="h-5 w-5" />
 				지도
 			</Link>
 			<Link
 				to="/ranking"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
-				<TrophyIcon className="h-6 w-6" />
+				<TrophyIcon className="h-5 w-5" />
 				랭킹
 			</Link>
 			<Link
 				to="/my"
 				className="flex flex-col items-center justify-center gap-1 text-sm font-medium text-muted-foreground hover:text-primary focus:text-primary"
 			>
-				<UserIcon className="h-6 w-6" />
+				<UserIcon className="h-5 w-5" />
 				MY
 			</Link>
 		</nav>
