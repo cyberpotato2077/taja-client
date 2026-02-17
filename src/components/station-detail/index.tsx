@@ -36,6 +36,37 @@ export function StationDetail({
 		});
 	};
 
+	const handleShare = async () => {
+		const shareUrl = window.location.href;
+		const shareTitle = `${station.name} - 따릉이 정보`;
+		const shareText = `${station.name}\n현재 자전거: ${latestObserved}대\n${station.address}`;
+
+		// Web Share API 지원 확인 (PWA 및 모바일 네이티브 공유)
+		if (navigator.share) {
+			try {
+				await navigator.share({
+					title: shareTitle,
+					text: shareText,
+					url: shareUrl,
+				});
+			} catch (error) {
+				// 사용자가 공유를 취소한 경우 등
+				if ((error as Error).name !== "AbortError") {
+					console.error("공유 실패:", error);
+				}
+			}
+		} else {
+			// Web Share API 미지원 시 클립보드에 복사
+			try {
+				await navigator.clipboard.writeText(shareUrl);
+				alert("링크가 클립보드에 복사되었습니다!");
+			} catch (error) {
+				console.error("클립보드 복사 실패:", error);
+				alert("공유 링크 복사에 실패했습니다.");
+			}
+		}
+	};
+
 	const formatTimestamp = (timestamp: string) => {
 		const date = new Date(timestamp);
 		const year = date.getFullYear();
@@ -86,6 +117,7 @@ export function StationDetail({
 				<div className="mt-4 flex items-center justify-between">
 					<button
 						type="button"
+						onClick={handleShare}
 						className="px-6 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm font-medium text-gray-700 flex items-center gap-2 transition-colors"
 					>
 						<Share2 className="w-4 h-4" />
