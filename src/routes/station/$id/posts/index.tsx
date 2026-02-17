@@ -46,7 +46,13 @@ function RouteComponent() {
 		<LayoutWithTop
 			title={stationData.name}
 			showBackButton
-			onBackButtonClick={() => router.history.back()}
+			onBackButtonClick={() => {
+				router.navigate({
+					to: "/station/$id",
+					params: { id },
+					replace: true,
+				});
+			}}
 		>
 			<Suspense fallback={<div>Loading...</div>}>
 				<div className="p-4">

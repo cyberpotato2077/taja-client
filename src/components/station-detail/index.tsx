@@ -4,7 +4,6 @@ import { RefreshCw, Share2 } from "lucide-react";
 import { Suspense } from "react";
 import { BikeCountChart } from "./bike-count-chart";
 import { FavoriteButton } from "./favorite-button";
-import { LocationInfo } from "./location-info";
 import { NearbyStations } from "./nearby-stations";
 import { RecentMessages } from "./recent-messages";
 
@@ -113,8 +112,6 @@ export function StationDetail({
 			/>
 
 			<NearbyStations stations={station.nearbyAvailableStations} />
-
-			<LocationInfo latitude={station.latitude} longitude={station.longitude} />
 		</div>
 	);
 }
