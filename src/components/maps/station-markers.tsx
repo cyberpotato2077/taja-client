@@ -6,7 +6,6 @@ import type {
 	MapStationResponse,
 } from "@/remotes/get-nearby-stations";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { StationDrawer } from "./station-drawer";
@@ -15,7 +14,6 @@ const MIN_ZOOM_LEVEL = 12; // 최소 줌 레벨 (충전소 마커를 표시하�
 
 export function StationMarkers() {
 	const overlay = useOverlay();
-	const navigate = useNavigate();
 	const map = useMap();
 	const [zoom, setZoom] = useState<number | undefined>(undefined);
 
@@ -69,14 +67,13 @@ export function StationMarkers() {
 						close();
 					}}
 					stationId={activeStationId}
-					navigate={navigate}
 				/>
 			));
 		}
 		return () => {
 			overlay.close();
 		};
-	}, [activeStationId, overlay, navigate, setMainQueryStates]);
+	}, [activeStationId, overlay, setMainQueryStates]);
 
 	const getBikeCountColor = (count: number) => {
 		if (count >= 10) return "bg-green-500 hover:bg-green-600";

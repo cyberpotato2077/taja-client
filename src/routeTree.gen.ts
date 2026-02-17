@@ -15,6 +15,7 @@ import { Route as MyRouteImport } from './routes/my'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StationIdIndexRouteImport } from './routes/station/$id/index'
+import { Route as StationIdStatisticsIndexRouteImport } from './routes/station/$id/statistics/index'
 import { Route as StationIdPostsIndexRouteImport } from './routes/station/$id/posts/index'
 import { Route as StationIdPostsNewIndexRouteImport } from './routes/station/$id/posts/new/index'
 import { Route as StationIdPostsPostIdIndexRouteImport } from './routes/station/$id/posts/$postId/index'
@@ -49,6 +50,12 @@ const StationIdIndexRoute = StationIdIndexRouteImport.update({
   path: '/station/$id/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StationIdStatisticsIndexRoute =
+  StationIdStatisticsIndexRouteImport.update({
+    id: '/station/$id/statistics/',
+    path: '/station/$id/statistics/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const StationIdPostsIndexRoute = StationIdPostsIndexRouteImport.update({
   id: '/station/$id/posts/',
   path: '/station/$id/posts/',
@@ -74,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/station/$id': typeof StationIdIndexRoute
   '/station/$id/posts': typeof StationIdPostsIndexRoute
+  '/station/$id/statistics': typeof StationIdStatisticsIndexRoute
   '/station/$id/posts/$postId': typeof StationIdPostsPostIdIndexRoute
   '/station/$id/posts/new': typeof StationIdPostsNewIndexRoute
 }
@@ -85,6 +93,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/station/$id': typeof StationIdIndexRoute
   '/station/$id/posts': typeof StationIdPostsIndexRoute
+  '/station/$id/statistics': typeof StationIdStatisticsIndexRoute
   '/station/$id/posts/$postId': typeof StationIdPostsPostIdIndexRoute
   '/station/$id/posts/new': typeof StationIdPostsNewIndexRoute
 }
@@ -97,6 +106,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/station/$id/': typeof StationIdIndexRoute
   '/station/$id/posts/': typeof StationIdPostsIndexRoute
+  '/station/$id/statistics/': typeof StationIdStatisticsIndexRoute
   '/station/$id/posts/$postId/': typeof StationIdPostsPostIdIndexRoute
   '/station/$id/posts/new/': typeof StationIdPostsNewIndexRoute
 }
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/station/$id'
     | '/station/$id/posts'
+    | '/station/$id/statistics'
     | '/station/$id/posts/$postId'
     | '/station/$id/posts/new'
   fileRoutesByTo: FileRoutesByTo
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/station/$id'
     | '/station/$id/posts'
+    | '/station/$id/statistics'
     | '/station/$id/posts/$postId'
     | '/station/$id/posts/new'
   id:
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/station/$id/'
     | '/station/$id/posts/'
+    | '/station/$id/statistics/'
     | '/station/$id/posts/$postId/'
     | '/station/$id/posts/new/'
   fileRoutesById: FileRoutesById
@@ -144,6 +157,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   StationIdIndexRoute: typeof StationIdIndexRoute
   StationIdPostsIndexRoute: typeof StationIdPostsIndexRoute
+  StationIdStatisticsIndexRoute: typeof StationIdStatisticsIndexRoute
   StationIdPostsPostIdIndexRoute: typeof StationIdPostsPostIdIndexRoute
   StationIdPostsNewIndexRoute: typeof StationIdPostsNewIndexRoute
 }
@@ -192,6 +206,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StationIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/station/$id/statistics/': {
+      id: '/station/$id/statistics/'
+      path: '/station/$id/statistics'
+      fullPath: '/station/$id/statistics'
+      preLoaderRoute: typeof StationIdStatisticsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/station/$id/posts/': {
       id: '/station/$id/posts/'
       path: '/station/$id/posts'
@@ -224,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   StationIdIndexRoute: StationIdIndexRoute,
   StationIdPostsIndexRoute: StationIdPostsIndexRoute,
+  StationIdStatisticsIndexRoute: StationIdStatisticsIndexRoute,
   StationIdPostsPostIdIndexRoute: StationIdPostsPostIdIndexRoute,
   StationIdPostsNewIndexRoute: StationIdPostsNewIndexRoute,
 }
