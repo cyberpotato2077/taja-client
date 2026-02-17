@@ -102,7 +102,7 @@ export function SearchBar() {
 		<div className="fixed top-4 left-1/2 -translate-x-1/2 w-full max-w-screen-sm px-4 z-50">
 			<Command shouldFilter={false}>
 				<CommandInput
-					placeholder="지역이나 충전소를 검색할 수 있어요."
+					placeholder="지역이나 대여소를 검색할 수 있어요."
 					value={query}
 					onValueChange={setQuery}
 					onClear={() => setQuery("")}
