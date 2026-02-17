@@ -111,6 +111,29 @@ export const toStationDetailResponse = (
 				distance: Math.random() * 1000,
 			}));
 
+	// hourlyAvailable - 시간대별 평균 대여 가능량
+	const hourlyAvailable = Array.from({ length: 24 }, (_, i) => ({
+		hour: i,
+		count: Math.floor(Math.random() * 15) + 2,
+		baseDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 일주일 전
+	}));
+
+	// dailyAvailable - 요일별 평균 대여 가능량
+	const dailyAvailable = ["월", "화", "수", "목", "금", "토", "일"].map((day) => ({
+		day,
+		count: Math.floor(Math.random() * 10) + 3,
+		baseDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 한달 전
+	}));
+
+	// temperatureAvailable - 기온별 평균 대여 가능량
+	const temperatureAvailable = [-10, -5, 0, 5, 10, 15, 20, 25, 30, 35].map(
+		(temp) => ({
+			temperature: temp,
+			count: Math.floor(Math.random() * 10) + 2,
+			baseDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(), // 3개월 전
+		}),
+	);
+
 	return {
 		stationId: station.stationId,
 		number: station.number,
@@ -126,9 +149,9 @@ export const toStationDetailResponse = (
 		},
 		recentPosts: recentPosts,
 		nearbyAvailableStations,
-		hourlyAvailable: [],
-		dailyAvailable: [],
-		temperatureAvailable: [],
+		hourlyAvailable,
+		dailyAvailable,
+		temperatureAvailable,
 	};
 };
 

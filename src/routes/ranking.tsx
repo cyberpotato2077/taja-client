@@ -20,7 +20,13 @@ function RouteComponent() {
 				</div>
 
 				<div className="space-y-4">
-					<Suspense fallback={<div>Loading...</div>}>
+					<Suspense
+						fallback={
+							<div className="flex justify-center items-center h-[80vh]">
+								Loading...
+							</div>
+						}
+					>
 						<SuspenseQuery {...rankingQueryOptions.daily()}>
 							{({ data: dailyRankedPosts }) =>
 								dailyRankedPosts.posts.map((post: Item) => (

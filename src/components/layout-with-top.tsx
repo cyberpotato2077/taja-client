@@ -32,6 +32,7 @@ export function LayoutWithTop({
 			{/* header 40px + bottom navigation bar 56px === 96px */}
 			<ScrollArea className="h-[calc(100vh-96px)] overflow-auto bg-white">
 				{children}
+				<div className="h-[60px]" />
 			</ScrollArea>
 		</div>
 	);

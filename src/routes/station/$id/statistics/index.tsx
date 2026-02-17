@@ -1,15 +1,15 @@
 import { LayoutWithTop } from "@/components/layout-with-top";
-import { StationDetail } from "@/components/station-detail";
+import { StationStatistics } from "@/components/station-statistics";
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { Suspense } from "@suspensive/react";
 import { SuspenseQuery } from "@suspensive/react-query-5";
 import { createFileRoute, useParams, useRouter } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/station/$id/")({
-	component: StationPage,
+export const Route = createFileRoute("/station/$id/statistics/")({
+	component: StatisticsPage,
 });
 
-function StationPage() {
+function StatisticsPage() {
 	const { id } = useParams({ from: Route.id });
 	const router = useRouter();
 
@@ -20,17 +20,11 @@ function StationPage() {
 				router.history.back();
 			}}
 		>
-			<Suspense
-				fallback={
-					<div className="flex justify-center items-center h-[100vh] w-full">
-						Loading...
-					</div>
-				}
-			>
+			<Suspense fallback>
 				<SuspenseQuery
 					{...stationQueryOptions.detail({ stationId: Number(id) })}
 				>
-					{({ data: station }) => <StationDetail station={station} />}
+					{({ data: station }) => <StationStatistics station={station} />}
 				</SuspenseQuery>
 			</Suspense>
 		</LayoutWithTop>

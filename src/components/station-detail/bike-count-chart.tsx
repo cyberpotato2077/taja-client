@@ -1,5 +1,5 @@
 import type { TodayAvailableBikeResponse } from "@/remotes/get-station";
-import { HelpCircle } from "lucide-react";
+import { ChevronRight, HelpCircle } from "lucide-react";
 import {
 	Area,
 	Bar,
@@ -14,9 +14,10 @@ import {
 
 interface BikeCountChartProps {
 	data: TodayAvailableBikeResponse;
+	onViewMore: () => void;
 }
 
-export function BikeCountChart({ data }: BikeCountChartProps) {
+export function BikeCountChart({ data, onViewMore }: BikeCountChartProps) {
 	const formatTimestamp = (timestamp: string) => {
 		const date = new Date(timestamp);
 		const year = date.getFullYear();
@@ -59,15 +60,27 @@ export function BikeCountChart({ data }: BikeCountChartProps) {
 						<HelpCircle className="w-4 h-4" />
 					</button>
 				</div>
-				<p className="text-xs text-gray-500">
-					{data.timeStamp ? formatTimestamp(data.timeStamp) : ""}
-				</p>
+				<button
+					type="button"
+					onClick={onViewMore}
+					className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+				>
+					더보기
+					<ChevronRight className="w-4 h-4" />
+				</button>
 			</div>
 
 			{/* 차트 */}
 			<ResponsiveContainer width="100%" height={200}>
-				<ComposedChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-					<CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+				<ComposedChart
+					data={chartData}
+					margin={{ top: 5, right: 5, left: -20, bottom: 5 }}
+				>
+					<CartesianGrid
+						strokeDasharray="3 3"
+						stroke="#f0f0f0"
+						vertical={false}
+					/>
 					<XAxis
 						dataKey="hour"
 						tick={{ fontSize: 12, fill: "#666" }}
@@ -116,6 +129,11 @@ export function BikeCountChart({ data }: BikeCountChartProps) {
 					/>
 				</ComposedChart>
 			</ResponsiveContainer>
+			<div className="flex justify-end gap-2">
+				<p className="text-xs text-gray-500">
+					{data.timeStamp ? formatTimestamp(data.timeStamp) : ""}
+				</p>
+			</div>
 		</div>
 	);
 }

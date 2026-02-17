@@ -12,6 +12,7 @@ import {
 	signup,
 	verifyEmail,
 } from "@/remotes/auth";
+import { getMember } from "@/remotes/get-member";
 import { queryOptions } from "@tanstack/react-query";
 
 export const authQueryOptions = {
@@ -56,6 +57,12 @@ export const authQueryOptions = {
 		return queryOptions({
 			queryKey: [...authQueryOptions.auth, "verify-email", request],
 			queryFn: () => verifyEmail(request),
+		});
+	},
+	member: () => {
+		return queryOptions({
+			queryKey: [...authQueryOptions.auth, "member"],
+			queryFn: () => getMember(),
 		});
 	},
 };

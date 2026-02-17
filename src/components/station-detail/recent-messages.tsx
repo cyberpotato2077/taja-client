@@ -1,3 +1,5 @@
+import { useAuth } from "@/hooks/use-auth";
+import { useLoginDialog } from "@/hooks/use-login-dialog";
 import type { RecentPostResponse } from "@/remotes/get-station";
 import { useRouter } from "@tanstack/react-router";
 import { MessageCircle } from "lucide-react";
@@ -14,10 +16,8 @@ export function RecentMessages({
 	onViewMore,
 }: RecentMessagesProps) {
 	const router = useRouter();
-
-	if (!posts || posts.length === 0) {
-		return null;
-	}
+	const { isLoggedIn } = useAuth();
+	const { openLoginDialog } = useLoginDialog();
 
 	const handlePostClick = (postId: number) => {
 		router.navigate({
@@ -29,13 +29,31 @@ export function RecentMessages({
 		});
 	};
 
+	const handleWritePost = () => {
+		if (!isLoggedIn) {
+			openLoginDialog();
+			return;
+		}
+
+		router.navigate({
+			to: "/station/$id/posts/new",
+			params: {
+				id: String(stationId),
+			},
+		});
+	};
+
+	const isEmpty = !posts || posts.length === 0;
+
 	return (
 		<div>
 			<div className="flex items-center justify-between mb-2">
 				<div className="flex items-center gap-2 mb-2">
 					<MessageCircle className="w-4 h-4 text-gray-600" />
 					<h3 className="text-sm font-semibold text-gray-700">게시판</h3>
-					<span className="text-xs text-gray-500">({posts.length})</span>
+					<span className="text-xs text-gray-500">
+						({isEmpty ? 0 : posts.length})
+					</span>
 				</div>
 				<div>
 					<button
@@ -47,8 +65,22 @@ export function RecentMessages({
 					</button>
 				</div>
 			</div>
-			<div className="space-y-2">
-				{posts.slice(0, 3).map((message: RecentPostResponse) => (
+			{isEmpty ? (
+				<div className="bg-gray-50 rounded-lg p-6 text-center">
+					<p className="text-sm text-gray-500 mb-3">
+						아직 작성된 게시글이 없습니다
+					</p>
+					<button
+						type="button"
+						className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+						onClick={handleWritePost}
+					>
+						{isLoggedIn ? "첫 게시글 작성하기" : "로그인하고 작성하기"}
+					</button>
+				</div>
+			) : (
+				<div className="space-y-2">
+					{posts.slice(0, 3).map((message: RecentPostResponse) => (
 					<button
 						key={message.postId}
 						type="button"
@@ -70,7 +102,8 @@ export function RecentMessages({
 						</div>
 					</button>
 				))}
-			</div>
+				</div>
+			)}
 		</div>
 	);
 }

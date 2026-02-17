@@ -1,20 +1,18 @@
 import type { StationDetailResponse } from "@/remotes/get-station";
-import type { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { RefreshCw, Share2 } from "lucide-react";
 import { Suspense } from "react";
 import { BikeCountChart } from "./bike-count-chart";
 import { FavoriteButton } from "./favorite-button";
-import { LocationInfo } from "./location-info";
 import { NearbyStations } from "./nearby-stations";
 import { RecentMessages } from "./recent-messages";
 
 export function StationDetail({
 	station,
-	navigate,
 }: {
 	station: StationDetailResponse;
-	navigate: ReturnType<typeof useNavigate>;
 }) {
+	const navigate = useNavigate();
 
 	const latestObserved =
 		station.todayAvailableBike?.observedBikeCountByHour?.slice(-1)[0]
@@ -23,6 +21,15 @@ export function StationDetail({
 	const handleViewMorePosts = () => {
 		navigate({
 			to: "/station/$id/posts",
+			params: {
+				id: String(station.stationId),
+			},
+		});
+	};
+
+	const handleViewStatistics = () => {
+		navigate({
+			to: "/station/$id/statistics",
 			params: {
 				id: String(station.stationId),
 			},
@@ -53,7 +60,8 @@ export function StationDetail({
 						<p className="text-sm text-gray-600 mb-1">{station.address}</p>
 						{station.operationMode && station.operationMode.length > 0 && (
 							<p className="text-sm text-gray-700 font-medium">
-								{station.operationMode[0].mode} {station.operationMode[0].rackCount}
+								{station.operationMode[0].mode}{" "}
+								{station.operationMode[0].rackCount}
 							</p>
 						)}
 					</div>
@@ -91,7 +99,10 @@ export function StationDetail({
 
 			{/* 오늘의 남은 자전거 그래프 */}
 			{station.todayAvailableBike && (
-				<BikeCountChart data={station.todayAvailableBike} />
+				<BikeCountChart
+					data={station.todayAvailableBike}
+					onViewMore={handleViewStatistics}
+				/>
 			)}
 
 			<RecentMessages
@@ -101,8 +112,6 @@ export function StationDetail({
 			/>
 
 			<NearbyStations stations={station.nearbyAvailableStations} />
-
-			<LocationInfo latitude={station.latitude} longitude={station.longitude} />
 		</div>
 	);
 }
