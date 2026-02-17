@@ -10,7 +10,7 @@ import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { StationDrawer } from "./station-drawer";
 
-const MIN_ZOOM_LEVEL = 12; // 최소 줌 레벨 (충전소 마커를 표시하기 위한)
+const MIN_ZOOM_LEVEL = 12; // 최소 줌 레벨 (대여소 마커를 표시하기 위한)
 
 export function StationMarkers() {
 	const overlay = useOverlay();

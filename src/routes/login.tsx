@@ -92,7 +92,7 @@ function RouteComponent() {
 					</Button>
 				</form>
 
-				{isMSWEnabled && (
+				{import.meta.env.DEV && isMSWEnabled && (
 					<div className="space-y-2">
 						<div className="relative">
 							<div className="absolute inset-0 flex items-center">
