@@ -29,7 +29,7 @@ export function SearchBar() {
 	const map = useMap();
 	if (!map) return null;
 
-	const [coordinates] = useMainQueryStates();
+	const [{ latitude, longitude }, setMainQueryStates] = useMainQueryStates();
 	const [query, setQuery] = useState("");
 
 	const normalizedQuery = useMemo(() => normalize(query), [query]);
@@ -41,8 +41,8 @@ export function SearchBar() {
 	} = useQuery({
 		...stationQueryOptions.search({
 			keyword: query,
-			lat: coordinates.latitude,
-			lng: coordinates.longitude,
+			lat: latitude,
+			lng: longitude,
 		}),
 		enabled: query.trim().length > 0,
 	});
@@ -122,6 +122,12 @@ export function SearchBar() {
 												lat: result.latitude,
 												lng: result.longitude,
 											});
+											setMainQueryStates({
+												activeStationId: Number(result.id),
+												latitude: result.latitude,
+												longitude: result.longitude,
+											});
+
 											setQuery("");
 										}}
 										className="flex flex-col items-start"
