@@ -1,5 +1,7 @@
 import { LayoutWithTop } from "@/components/layout-with-top";
 import { PostList } from "@/components/post-list";
+import { useAuth } from "@/hooks/use-auth";
+import { useLoginDialog } from "@/hooks/use-login-dialog";
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { Suspense } from "@suspensive/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -25,8 +27,15 @@ function RouteComponent() {
 		Route.useLoaderData();
 	const { data: postsData } = useSuspenseQuery(postsQueryOptions);
 	const { data: stationData } = useSuspenseQuery(stationDetailQueryOptions);
+	const { isLoggedIn } = useAuth();
+	const { openLoginDialog } = useLoginDialog();
 
 	const handleWritePost = () => {
+		if (!isLoggedIn) {
+			openLoginDialog();
+			return;
+		}
+
 		router.navigate({
 			to: "/station/$id/posts/new",
 			params: { id },
