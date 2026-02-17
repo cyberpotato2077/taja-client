@@ -1,11 +1,14 @@
 import { CommentList } from "@/components/comment-list";
 import { LayoutWithTop } from "@/components/layout-with-top";
+import { useAuth } from "@/hooks/use-auth";
+import { authQueryOptions } from "@/queries/auth-query-options";
 import { stationQueryOptions } from "@/queries/station-query-options";
 import { createComment } from "@/remotes/create-comment";
+import { deletePost } from "@/remotes/delete-post";
 import { Suspense } from "@suspensive/react";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams, useRouter } from "@tanstack/react-router";
-import { Send } from "lucide-react";
+import { useMutation, useQueryClient, useSuspenseQuery, useQuery } from "@tanstack/react-query";
+import { createFileRoute, useParams, useRouter, useNavigate } from "@tanstack/react-router";
+import { Send, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/station/$id/posts/$postId/")({
@@ -30,9 +33,18 @@ function RouteComponent() {
 
 function PostDetail({ postId }: { postId: string }) {
 	const queryClient = useQueryClient();
+	const navigate = useNavigate();
+	const { id: stationId } = useParams({ from: "/station/$id/posts/$postId/" });
+	const { isLoggedIn } = useAuth();
+
 	const { data: postDetail } = useSuspenseQuery(
 		stationQueryOptions.postDetail(Number(postId)),
 	);
+
+	const { data: currentUser } = useQuery({
+		...authQueryOptions.member(),
+		enabled: isLoggedIn,
+	});
 
 	const [comment, setComment] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +53,6 @@ function PostDetail({ postId }: { postId: string }) {
 		mutationFn: (content: string) =>
 			createComment(Number(postId), { content }),
 		onSuccess: () => {
-			// 게시글 상세 쿼리 무효화하여 새로고침
 			queryClient.invalidateQueries({
 				queryKey: ["station", "postDetail", Number(postId)],
 			});
@@ -52,6 +63,20 @@ function PostDetail({ postId }: { postId: string }) {
 			console.error("Failed to create comment:", error);
 			alert("댓글 작성에 실패했습니다. 다시 시도해주세요.");
 			setIsSubmitting(false);
+		},
+	});
+
+	const deletePostMutation = useMutation({
+		mutationFn: () => deletePost(Number(postId)),
+		onSuccess: () => {
+			navigate({
+				to: "/station/$id/posts",
+				params: { id: stationId },
+			});
+		},
+		onError: (error) => {
+			console.error("Failed to delete post:", error);
+			alert("게시글 삭제에 실패했습니다.");
 		},
 	});
 
@@ -71,6 +96,14 @@ function PostDetail({ postId }: { postId: string }) {
 		createCommentMutation.mutate(comment);
 	};
 
+	const handleDeletePost = () => {
+		if (confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+			deletePostMutation.mutate();
+		}
+	};
+
+	const isPostOwner = currentUser && postDetail.writer === currentUser.name;
+
 	return (
 		<div className="relative min-h-full pb-20">
 			{/* 컨텐츠 영역 */}
@@ -83,8 +116,20 @@ function PostDetail({ postId }: { postId: string }) {
 							</span>
 						</div>
 						<div className="flex-1">
-							<div className="font-medium text-gray-900 mb-2">
-								{postDetail.writer}
+							<div className="flex items-center justify-between mb-2">
+								<div className="font-medium text-gray-900">
+									{postDetail.writer}
+								</div>
+								{isPostOwner && (
+									<button
+										type="button"
+										onClick={handleDeletePost}
+										className="text-red-500 hover:text-red-700 p-1 transition-colors"
+										disabled={deletePostMutation.isPending}
+									>
+										<Trash2 className="w-5 h-5" />
+									</button>
+								)}
 							</div>
 							<div className="text-gray-700 mb-3">{postDetail.content}</div>
 							<div className="flex items-center gap-4 text-sm text-gray-500">
@@ -99,7 +144,11 @@ function PostDetail({ postId }: { postId: string }) {
 				<h3 className="text-lg font-semibold mb-4">
 					댓글 ({postDetail.comments.length})
 				</h3>
-				<CommentList comments={postDetail.comments} />
+				<CommentList
+					comments={postDetail.comments}
+					currentUserName={currentUser?.name}
+					postId={Number(postId)}
+				/>
 			</div>
 
 			{/* 하단 고정 댓글 입력 폼 */}
