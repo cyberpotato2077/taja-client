@@ -12,14 +12,19 @@ export const Route = createFileRoute("/station/$id/posts/")({
 		postsQueryOptions: stationQueryOptions.posts({
 			stationId: Number(params.id),
 		}),
+		stationDetailQueryOptions: stationQueryOptions.detail({
+			stationId: Number(params.id),
+		}),
 	}),
 });
 
 function RouteComponent() {
 	const router = useRouter();
 	const { id } = Route.useParams();
-	const { postsQueryOptions: queryOptions } = Route.useLoaderData();
-	const { data: postsData } = useSuspenseQuery(queryOptions);
+	const { postsQueryOptions, stationDetailQueryOptions } =
+		Route.useLoaderData();
+	const { data: postsData } = useSuspenseQuery(postsQueryOptions);
+	const { data: stationData } = useSuspenseQuery(stationDetailQueryOptions);
 
 	const handleWritePost = () => {
 		router.navigate({
@@ -30,11 +35,15 @@ function RouteComponent() {
 
 	return (
 		<LayoutWithTop
+			title={stationData.name}
 			showBackButton
 			onBackButtonClick={() => router.history.back()}
 		>
 			<Suspense fallback={<div>Loading...</div>}>
 				<div className="p-4">
+					<div className="mb-4">
+						<p className="text-sm text-gray-600 mb-3">{stationData.address}</p>
+					</div>
 					<div className="flex items-center justify-between mb-4">
 						<h2 className="text-lg font-semibold">게시판</h2>
 						<button
