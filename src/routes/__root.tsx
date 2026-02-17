@@ -8,6 +8,7 @@ import { BottomNavigation } from "@/components/bottom-navigation";
 import { MapController } from "@/components/map-controller";
 import { GoogleMapWrapper } from "@/components/maps/google-map-wrapper";
 import { StationMap } from "@/components/maps/station-map";
+import { getOperation } from "@/utils/operations";
 import type { QueryClient } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/tanstack-router";
 import { OverlayProvider } from "overlay-kit";
@@ -34,18 +35,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 						</OverlayProvider>
 					</div>
 				</div>
-				<TanstackDevtools
-					config={{
-						position: "bottom-left",
-					}}
-					plugins={[
-						{
-							name: "Tanstack Router",
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-						TanStackQueryDevtools,
-					]}
-				/>
+				{getOperation() === "local" ? (
+					<TanstackDevtools
+						config={{
+							position: "bottom-left",
+						}}
+						plugins={[
+							{
+								name: "Tanstack Router",
+								render: <TanStackRouterDevtoolsPanel />,
+							},
+							TanStackQueryDevtools,
+						]}
+					/>
+				) : null}
 			</>
 		);
 	},

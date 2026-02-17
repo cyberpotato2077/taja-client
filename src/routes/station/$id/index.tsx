@@ -1,13 +1,9 @@
 import { LayoutWithTop } from "@/components/layout-with-top";
 import { StationDetail } from "@/components/station-detail";
 import { stationQueryOptions } from "@/queries/station-query-options";
-import { useQuery } from "@tanstack/react-query";
-import {
-	createFileRoute,
-	useNavigate,
-	useParams,
-	useRouter,
-} from "@tanstack/react-router";
+import { Suspense } from "@suspensive/react";
+import { SuspenseQuery } from "@suspensive/react-query-5";
+import { createFileRoute, useParams, useRouter } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/station/$id/")({
 	component: StationPage,
@@ -17,16 +13,6 @@ function StationPage() {
 	const { id } = useParams({ from: Route.id });
 	const router = useRouter();
 
-	const {
-		data: station,
-		isPending,
-		isError,
-	} = useQuery(stationQueryOptions.detail({ stationId: Number(id) }));
-
-	if (isPending || isError) {
-		return null;
-	}
-
 	return (
 		<LayoutWithTop
 			showBackButton
@@ -34,7 +20,19 @@ function StationPage() {
 				router.history.back();
 			}}
 		>
-			<StationDetail station={station} />
+			<Suspense
+				fallback={
+					<div className="flex justify-center items-center h-[100vh] w-full">
+						Loading...
+					</div>
+				}
+			>
+				<SuspenseQuery
+					{...stationQueryOptions.detail({ stationId: Number(id) })}
+				>
+					{({ data: station }) => <StationDetail station={station} />}
+				</SuspenseQuery>
+			</Suspense>
 		</LayoutWithTop>
 	);
 }
