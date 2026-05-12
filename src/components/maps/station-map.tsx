@@ -48,7 +48,6 @@ export function StationMap() {
 						lng: sw.lng(),
 					},
 				});
-				console.log("[onIdle setCoordinates]", { latitude, longitude });
 				setCoordinates({
 					latitude,
 					longitude,

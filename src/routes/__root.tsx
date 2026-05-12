@@ -23,16 +23,16 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			<>
 				<div className="min-h-screen bg-gray-100">
 					<div className="max-w-screen-sm mx-auto">
-						<GoogleMapWrapper>
-							<OverlayProvider>
-								<NuqsAdapter>
+						<OverlayProvider>
+							<NuqsAdapter>
+								<GoogleMapWrapper>
 									<StationMap />
 									<Outlet />
 									<MapController />
 									<BottomNavigation />
-								</NuqsAdapter>
-							</OverlayProvider>
-						</GoogleMapWrapper>
+								</GoogleMapWrapper>
+							</NuqsAdapter>
+						</OverlayProvider>
 					</div>
 				</div>
 				{getOperation() === "local" ? (
