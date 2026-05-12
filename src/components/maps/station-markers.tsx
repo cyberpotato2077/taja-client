@@ -136,12 +136,21 @@ export function StationMarkers() {
 							lng: station.longitude,
 						}}
 						onClick={() => {
+							console.log("[marker click]", {
+								stationId: station.stationId,
+								before: window.location.search,
+							});
 							map.panTo({
 								lat: station.latitude,
 								lng: station.longitude,
 							});
 							setMainQueryStates({
 								activeStationId: station.stationId,
+							}).then(() => {
+								console.log(
+									"[after setMainQueryStates]",
+									window.location.search,
+								);
 							});
 						}}
 					>
